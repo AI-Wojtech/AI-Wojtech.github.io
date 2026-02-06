@@ -1,0 +1,326 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+const { title, description, canonical } = Astro.props;
+const siteTitle = "Wojciech Seweryn";
+const metaTitle = title ? `${title} | ${siteTitle}` : siteTitle;
+const metaDescription = description ?? "A minimalist technical blog about personalization and optimization.";
+const canonicalUrl = canonical ?? Astro.url;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{metaTitle}</title>
+    <meta name="description" content={metaDescription} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/png" href="/images/ws-blog-favicon.png" />
+    <meta property="og:title" content={metaTitle} />
+    <meta property="og:description" content={metaDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content="https://wseweryn.dev/images/wojciech-1.png" />
+    <meta property="og:image:alt" content="Wojciech Seweryn" />
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem("theme");
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = stored ?? (prefersDark ? "dark" : "light");
+          document.documentElement.classList.toggle("dark", theme === "dark");
+          document.documentElement.dataset.theme = theme;
+        } catch {}
+      })();
+    </script>
+  </head>
+  <body class="antialiased">
+    <div class="bg-wownoise"></div>
+    <div class="bg-grid"></div>
+    <Header />
+    <main class="mx-auto max-w-4xl px-4 py-10">
+      <slot />
+    </main>
+    <Footer />
+    <script is:inline>
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const cards = document.querySelectorAll("[data-tilt-card]");
+        const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+
+        cards.forEach((card) => {
+          let frame = null;
+
+          const update = (event) => {
+            const rect = card.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            const mx = (x / rect.width) * 100;
+            const my = (y / rect.height) * 100;
+            const rx = clamp(((y / rect.height) - 0.5) * -8, -6, 6);
+            const ry = clamp(((x / rect.width) - 0.5) * 8, -6, 6);
+            const ox = clamp(((x / rect.width) - 0.5) * 10, -6, 6);
+            const oy = clamp(((y / rect.height) - 0.5) * 10, -6, 6);
+
+            card.style.setProperty("--mx", `${mx}%`);
+            card.style.setProperty("--my", `${my}%`);
+            card.style.setProperty("--rx", `${rx}deg`);
+            card.style.setProperty("--ry", `${ry}deg`);
+            card.style.setProperty("--ox", `${ox}px`);
+            card.style.setProperty("--oy", `${oy}px`);
+          };
+
+          const onMove = (event) => {
+            if (frame) return;
+            frame = requestAnimationFrame(() => {
+              update(event);
+              frame = null;
+            });
+          };
+
+          const onLeave = () => {
+            card.style.setProperty("--rx", "0deg");
+            card.style.setProperty("--ry", "0deg");
+            card.style.setProperty("--ox", "0px");
+            card.style.setProperty("--oy", "0px");
+            card.style.setProperty("--mx", "50%");
+            card.style.setProperty("--my", "50%");
+          };
+
+          card.addEventListener("pointermove", onMove);
+          card.addEventListener("pointerleave", onLeave);
+        });
+      }
+
+      const themeToggle = document.querySelector("[data-theme-toggle]");
+      if (themeToggle) {
+        const applyTheme = (theme) => {
+          document.documentElement.classList.toggle("dark", theme === "dark");
+          document.documentElement.dataset.theme = theme;
+          themeToggle.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+          try {
+            localStorage.setItem("theme", theme);
+          } catch {}
+        };
+
+        const currentTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+        themeToggle.setAttribute("aria-pressed", currentTheme === "dark" ? "true" : "false");
+
+        themeToggle.addEventListener("click", () => {
+          const nextTheme = document.documentElement.classList.contains("dark") ? "light" : "dark";
+          applyTheme(nextTheme);
+        });
+      }
+
+      const rotators = document.querySelectorAll("[data-rotating-words]");
+      if (rotators.length > 0 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const startRotator = (el) => {
+          const words = (el.dataset.rotatingWords || "")
+            .split("|")
+            .map((word) => word.trim())
+            .filter(Boolean);
+          if (words.length === 0) return;
+
+          let wordIndex = 0;
+          let charIndex = 0;
+          let deleting = false;
+
+          const typeSpeed = 80;
+          const deleteSpeed = 50;
+          const pause = 1200;
+
+          const tick = () => {
+            const word = words[wordIndex];
+            if (!deleting) {
+              charIndex += 1;
+              el.textContent = word.slice(0, charIndex);
+              if (charIndex === word.length) {
+                deleting = true;
+                setTimeout(tick, pause);
+                return;
+              }
+            } else {
+              charIndex -= 1;
+              el.textContent = word.slice(0, charIndex);
+              if (charIndex === 0) {
+                deleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+              }
+            }
+            setTimeout(tick, deleting ? deleteSpeed : typeSpeed);
+          };
+
+          tick();
+        };
+
+        rotators.forEach((el) => startRotator(el));
+      }
+
+      const clickableCards = document.querySelectorAll("[data-card-click]");
+      clickableCards.forEach((card) => {
+        const url = card.dataset.cardUrl;
+        if (!url) return;
+
+        const shouldIgnore = (event) => {
+          if (event.defaultPrevented) return true;
+          const tagLink = event.target.closest("[data-tag-link]");
+          if (tagLink) return true;
+          const link = event.target.closest("a");
+          if (link) return true;
+          return false;
+        };
+
+        card.addEventListener("click", (event) => {
+          if (shouldIgnore(event)) return;
+          window.location.href = url;
+        });
+
+        card.addEventListener("keydown", (event) => {
+          if (shouldIgnore(event)) return;
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            window.location.href = url;
+          }
+        });
+      });
+
+      const setupCopyButtons = () => {
+        const blocks = document.querySelectorAll("pre > code");
+        blocks.forEach((code) => {
+          const pre = code.parentElement;
+          if (!pre || pre.querySelector(".code-copy")) return;
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "code-copy";
+          button.textContent = "Copy";
+          button.addEventListener("click", async () => {
+            const text = code.textContent ?? "";
+            try {
+              await navigator.clipboard.writeText(text);
+              button.textContent = "Copied";
+            } catch {
+              const area = document.createElement("textarea");
+              area.value = text;
+              area.style.position = "fixed";
+              area.style.opacity = "0";
+              document.body.appendChild(area);
+              area.focus();
+              area.select();
+              document.execCommand("copy");
+              area.remove();
+              button.textContent = "Copied";
+            }
+            setTimeout(() => {
+              button.textContent = "Copy";
+            }, 1400);
+          });
+          pre.appendChild(button);
+        });
+      };
+
+      const setupImageLightbox = () => {
+        const images = document.querySelectorAll("article.prose img");
+        if (images.length === 0) return;
+        let overlay = null;
+
+        const close = () => {
+          if (!overlay) return;
+          document.body.removeChild(overlay);
+          overlay = null;
+          document.body.style.overflow = "";
+        };
+
+        images.forEach((img) => {
+          img.addEventListener("click", () => {
+            if (overlay) return;
+            overlay = document.createElement("div");
+            overlay.className = "lightbox";
+            const clone = document.createElement("img");
+            clone.src = img.getAttribute("src") ?? "";
+            clone.alt = img.getAttribute("alt") ?? "";
+            overlay.appendChild(clone);
+            overlay.addEventListener("click", (event) => {
+              if (event.target === overlay) close();
+            });
+            document.addEventListener("keydown", (event) => {
+              if (event.key === "Escape") close();
+            }, { once: true });
+            document.body.appendChild(overlay);
+            document.body.style.overflow = "hidden";
+          });
+        });
+      };
+
+      const setupReadingProgress = () => {
+        const bar = document.querySelector("[data-reading-progress]");
+        if (!bar) return;
+        const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        let ticking = false;
+        let scrollTimeout = null;
+
+        const update = () => {
+          const doc = document.documentElement;
+          const scrollTop = doc.scrollTop || document.body.scrollTop;
+          const height = doc.scrollHeight - doc.clientHeight;
+          const progress = height > 0 ? Math.min(scrollTop / height, 1) : 0;
+          bar.style.setProperty("--progress", `${progress}`);
+          if (!prefersReduced) {
+            bar.style.transform = `scaleX(${progress})`;
+          } else {
+            bar.style.width = `${progress * 100}%`;
+          }
+          ticking = false;
+        };
+
+        const onScroll = () => {
+          if (ticking) return;
+          ticking = true;
+          bar.classList.add("is-scrolling");
+          if (scrollTimeout) {
+            clearTimeout(scrollTimeout);
+          }
+          scrollTimeout = setTimeout(() => {
+            bar.classList.remove("is-scrolling");
+          }, 140);
+          requestAnimationFrame(update);
+        };
+
+        update();
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
+      };
+
+      setupCopyButtons();
+      setupImageLightbox();
+      setupReadingProgress();
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "/" || event.metaKey || event.ctrlKey || event.altKey) return;
+        const target = event.target;
+        if (
+          target instanceof HTMLElement &&
+          (target.tagName === "INPUT" ||
+            target.tagName === "TEXTAREA" ||
+            target.tagName === "SELECT" ||
+            target.isContentEditable)
+        ) {
+          return;
+        }
+
+        const inputs = Array.from(document.querySelectorAll("[data-search-input]"));
+        const visibleInput = inputs.find((input) => {
+          if (!(input instanceof HTMLElement)) return false;
+          if (input.closest(".hidden")) return false;
+          return input.offsetParent !== null;
+        });
+
+        if (visibleInput && visibleInput instanceof HTMLInputElement) {
+          event.preventDefault();
+          visibleInput.focus();
+          visibleInput.select();
+        }
+      });
+    </script>
+  </body>
+</html>

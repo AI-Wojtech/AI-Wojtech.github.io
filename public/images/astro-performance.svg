@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f141c"/>
+      <stop offset="100%" stop-color="#1b9aaa"/>
+    </linearGradient>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0H0V36" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <g fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2">
+    <path d="M140 420 C 260 320, 420 320, 540 420"/>
+    <path d="M560 420 C 680 320, 840 320, 960 420"/>
+  </g>
+  <g fill="white">
+    <text x="80" y="210" font-family="IBM Plex Sans, Arial, sans-serif" font-size="54" font-weight="600">Astro Performance</text>
+    <text x="80" y="270" font-family="IBM Plex Sans, Arial, sans-serif" font-size="28" opacity="0.8">A tiny image placeholder for the blog</text>
+  </g>
+</svg>

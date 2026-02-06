@@ -1,0 +1,41 @@
+---
+import { Github, Rss, Linkedin, ChevronDown } from "lucide-astro";
+---
+<footer class="mx-auto mt-16 max-w-4xl border-t border-black/10 dark:border-white/10 px-4 py-10 text-sm text-ink-900/80 dark:text-ink-200/80">
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div class="footer-left">
+      <details class="footer-disclosure">
+        <summary>
+          &copy; 2026 Wojciech Seweryn. Privacy-first - no cookies, no tracking.
+          <span class="footer-disclosure-hint" aria-hidden="true">
+            Details
+            <ChevronDown size={14} class="footer-disclosure-icon" />
+          </span>
+        </summary>
+        <div class="footer-banner">
+          <p>
+            I build data-driven personalization and experimentation for a living:
+          </p>
+          <p class="footer-banner-strong">
+            Optimizely, GTM, dataLayer, event tracking - the whole measurement stack.
+          </p>
+          <p class="footer-banner-spaced">
+            This blog is the exception - no cookies, no trackers, no tags. Just words.
+          </p>
+        </div>
+      </details>
+    </div>
+    <div class="flex items-center gap-4">
+      <a class="footer-contact" href="/contact">Contact</a>
+      <a href="https://github.com/AI-Wojtech" aria-label="GitHub">
+        <Github size={18} />
+      </a>
+      <a href="https://www.linkedin.com/in/wojciechseweryn/" aria-label="LinkedIn">
+        <Linkedin size={18} />
+      </a>
+      <a href="/rss.xml" aria-label="RSS">
+        <Rss size={18} />
+      </a>
+    </div>
+  </div>
+</footer>

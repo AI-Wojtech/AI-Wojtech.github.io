@@ -1,0 +1,4 @@
+src/content/blog-dummy/
+node_modules/
+.astro/
+dist/

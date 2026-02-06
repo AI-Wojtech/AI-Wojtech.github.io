@@ -1,0 +1,41 @@
+---
+import { getReadingTime } from "../utils/readingTime";
+
+const { post, class: className = "", ...rest } = Astro.props;
+const { title, description, pubDate, tags } = post.data;
+const { minutes } = getReadingTime(post.body ?? "");
+---
+<article
+  class={`card card-tilt ${className}`.trim()}
+  data-tilt-card
+  data-card-click
+  data-card-url={`/blog/${post.slug}`}
+  tabindex="0"
+  {...rest}
+>
+  <div class="card-surface p-6">
+    <div class="flex flex-col gap-3">
+      <a href={`/blog/${post.slug}`} class="block">
+        <h3 class="text-lg font-semibold">{title}</h3>
+        <p class="mt-2 text-sm text-ink-900/80 dark:text-ink-200/80">{description}</p>
+      </a>
+      <div class="text-xs text-ink-900/70 dark:text-ink-200/70">
+        <time datetime={pubDate.toISOString()}>{pubDate.toLocaleDateString("en-US")}</time>
+        <span aria-hidden="true"> · </span>
+        <span>{minutes} min read</span>
+      </div>
+      <div class="mt-1 flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <a
+            class="tag-chip tag-chip-large"
+            href={`/tag/${tag}`}
+            aria-label={`Tag: ${tag}`}
+            data-tag-link
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</article>

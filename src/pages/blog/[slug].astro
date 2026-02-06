@@ -1,0 +1,77 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { getCollection } from "astro:content";
+import { getReadingTime } from "../../utils/readingTime";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({ params: { slug: post.slug }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate, tags } = post.data;
+const { Content, headings } = await post.render();
+const { minutes } = getReadingTime(post.body ?? "");
+const toc = headings.filter((heading) => heading.depth > 1 && heading.depth <= 3);
+
+const relatedPosts = (await getCollection("blog"))
+  .filter((entry) => !entry.data.draft && entry.slug !== post.slug)
+  .map((entry) => {
+    const shared = entry.data.tags.filter((tag) => tags.includes(tag)).length;
+    return { entry, shared };
+  })
+  .filter((item) => item.shared > 0)
+  .sort((a, b) => {
+    if (b.shared !== a.shared) return b.shared - a.shared;
+    return b.entry.data.pubDate.valueOf() - a.entry.data.pubDate.valueOf();
+  })
+  .slice(0, 2)
+  .map((item) => item.entry);
+---
+<BaseLayout title={title} description={description} canonical={Astro.url}>
+  <div class="reading-progress" data-reading-progress></div>
+  <article class="prose lg:prose-lg">
+    <h1>{title}</h1>
+    <p class="text-sm text-ink-900/70 dark:text-ink-200/70">
+      <time datetime={pubDate.toISOString()}>{pubDate.toLocaleDateString("en-US")}</time>
+      <span aria-hidden="true"> · </span>
+      <span>{minutes} min read</span>
+    </p>
+    <div class="mt-4 flex flex-wrap gap-2">
+      {tags.map((tag) => (
+        <a class="tag-chip tag-chip-large" href={`/tag/${tag}`}>
+          #{tag}
+        </a>
+      ))}
+    </div>
+    {toc.length > 0 && (
+      <nav class="toc not-prose" aria-label="Table of contents">
+        <div class="toc-title">On this page</div>
+        <ul class="toc-list">
+          {toc.map((heading) => (
+            <li class={`toc-item depth-${heading.depth}`}>
+              <a class="toc-link" href={`#${heading.slug}`}>{heading.text}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
+    <hr />
+    <Content />
+  </article>
+  {relatedPosts.length >= 2 && (
+    <section class="mt-12">
+      <div class="section-divider" aria-hidden="true"></div>
+      <h2 class="page-title text-2xl">Related posts</h2>
+      <div class:list={{
+        "mt-6 grid gap-6": true,
+        "md:grid-cols-2": relatedPosts.length > 1
+      }}>
+        {relatedPosts.map((related) => (
+          <PostCard post={related} class="card-compact" />
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

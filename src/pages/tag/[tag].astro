@@ -1,0 +1,371 @@
+﻿---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  const tags = new Set(posts.flatMap((p) => p.data.tags));
+  return Array.from(tags).map((tag) => ({ params: { tag } }));
+}
+
+const allPosts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const allTags = Array.from(new Set(allPosts.flatMap((p) => p.data.tags))).sort();
+const primaryTag = Astro.params.tag;
+const initialTags = [primaryTag];
+---
+<BaseLayout title={`Tag: ${primaryTag}`}>
+  <div class="page-header mb-6">
+    <h1 class="page-title" data-filter-title>Filter by tag</h1>
+    <label class="search-bar hidden" data-search-wrapper>
+      <span class="sr-only">Search</span>
+      <span class="search-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M20 20l-3.5-3.5"></path>
+        </svg>
+      </span>
+      <input
+        class="search-input"
+        type="search"
+        placeholder="Search"
+        aria-label="Search posts"
+        data-search-input
+      />
+    </label>
+  </div>
+  <section class="mb-8" data-tag-filter data-filter-ui data-primary-tag={primaryTag}>
+    <div class="filter-bar">
+      <div class="filter-meta">
+        <span class="filter-label">Active filters</span>
+        <div class="filter-chips" data-active-tags>
+          {initialTags.map((tag) => (
+            <button class="tag-chip tag-chip-compact" type="button" data-remove-tag={tag} aria-label={`Remove ${tag}`}>
+              <span>#{tag}</span>
+              <span class="tag-chip-x" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="10" height="10">
+                  <path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div class="filter-actions">
+        <button
+          class="mode-toggle"
+          type="button"
+          data-mode-toggle
+          data-mode="and"
+          role="switch"
+          aria-checked="false"
+          aria-label="Filter mode: AND"
+        >
+          <span class="mode-label">AND</span>
+          <span class="mode-label">OR</span>
+        </button>
+        <button class="clear-btn" type="button" data-clear-tags>Clear all</button>
+      </div>
+    </div>
+
+    <div class="mt-4 flex flex-wrap gap-2">
+      {allTags.map((tag) => (
+        <button
+          class="tag-btn"
+          type="button"
+          data-tag={tag}
+          data-active={initialTags.includes(tag) ? "true" : "false"}
+          aria-pressed={initialTags.includes(tag) ? "true" : "false"}
+        >
+          #{tag}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <section class="grid gap-6" data-post-list>
+    {allPosts.map((post) => (
+      <div
+        data-post-tags={post.data.tags.join(",")}
+        class:list={{ hidden: !post.data.tags.includes(primaryTag) }}
+      >
+        <PostCard post={post} />
+      </div>
+    ))}
+    <div class="card-surface p-6 hidden empty-state" data-empty-state>
+      <h2 class="text-lg font-semibold">No posts match the selected filters</h2>
+      <p class="mt-2 text-sm text-ink-900/70 dark:text-ink-200/70">
+        Try switching to OR to broaden the results.
+      </p>
+      <div class="mt-4">
+        <button
+          class="mode-toggle"
+          type="button"
+          data-mode-toggle
+          data-mode="and"
+          role="switch"
+          aria-checked="false"
+          aria-label="Filter mode: AND"
+        >
+          <span class="mode-label">AND</span>
+          <span class="mode-label">OR</span>
+        </button>
+      </div>
+    </div>
+  </section>
+  <section class="grid gap-6 hidden" data-search-results></section>
+  <div class="card-surface p-6 hidden empty-state" data-search-empty>
+    <h2 class="text-lg font-semibold">No posts match your search</h2>
+    <p class="mt-2 text-sm text-ink-900/70 dark:text-ink-200/70">
+      Try a different keyword or clear the search field.
+    </p>
+  </div>
+
+  <script>
+    import { initBlogSearch } from "../../utils/blogSearch";
+
+    const root = document.querySelector("[data-tag-filter]");
+    if (root) {
+      const posts = Array.from(document.querySelectorAll("[data-post-tags]"));
+      const buttons = Array.from(document.querySelectorAll("[data-tag]"));
+      const activeContainer = root.querySelector("[data-active-tags]");
+      const clearButton = root.querySelector("[data-clear-tags]");
+      const modeToggles = Array.from(document.querySelectorAll("[data-mode-toggle]"));
+      const emptyState = document.querySelector("[data-empty-state]");
+      const titleEl = document.querySelector("[data-filter-title]");
+      const filterUi = document.querySelector("[data-filter-ui]");
+      const defaultTitle = titleEl ? titleEl.textContent : "";
+      const searchInput = document.querySelector("[data-search-input]");
+      const searchResults = document.querySelector("[data-search-results]");
+      const searchEmpty = document.querySelector("[data-search-empty]");
+      const postList = document.querySelector("[data-post-list]");
+      const searchWrapper = document.querySelector("[data-search-wrapper]");
+      let searchActive = false;
+
+      const setVisible = (element, visible) => {
+        if (!element) return;
+        element.classList.toggle("hidden", !visible);
+      };
+
+      const readParamTags = () => {
+        const params = new URLSearchParams(window.location.search);
+        const raw = params.get("tags");
+        if (!raw) return [];
+        return raw.split(",").map((t) => t.trim()).filter(Boolean);
+      };
+
+      const readMode = () => {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("mode") === "or" ? "or" : "and";
+      };
+
+      const active = new Set([root.dataset.primaryTag, ...readParamTags()]);
+      let mode = readMode();
+
+      const renderActive = () => {
+        activeContainer.innerHTML = "";
+        const createChip = (tag) => {
+          const chip = document.createElement("button");
+          chip.type = "button";
+          chip.className = "tag-chip tag-chip-compact";
+          chip.setAttribute("data-remove-tag", tag);
+          chip.setAttribute("aria-label", `Remove ${tag}`);
+
+          const text = document.createElement("span");
+          text.textContent = `#${tag}`;
+
+          const icon = document.createElement("span");
+          icon.className = "tag-chip-x";
+          icon.setAttribute("aria-hidden", "true");
+
+          const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          svg.setAttribute("viewBox", "0 0 16 16");
+          svg.setAttribute("width", "10");
+          svg.setAttribute("height", "10");
+
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute("d", "M4 4l8 8M12 4l-8 8");
+          path.setAttribute("fill", "none");
+          path.setAttribute("stroke", "currentColor");
+          path.setAttribute("stroke-width", "2");
+          path.setAttribute("stroke-linecap", "round");
+
+          svg.appendChild(path);
+          icon.appendChild(svg);
+          chip.append(text, icon);
+
+          chip.addEventListener("click", () => toggleTag(tag));
+          return chip;
+        };
+
+        Array.from(active).forEach((tag) => {
+          activeContainer.appendChild(createChip(tag));
+        });
+        if (clearButton) {
+          clearButton.hidden = active.size <= 1;
+        }
+      };
+
+      const syncButtons = () => {
+        buttons.forEach((btn) => {
+          const tag = btn.dataset.tag;
+          const isActive = active.has(tag);
+          btn.dataset.active = isActive ? "true" : "false";
+          btn.setAttribute("aria-pressed", isActive ? "true" : "false");
+        });
+      };
+
+      const applyFilter = () => {
+        if (searchActive) return;
+        const activeTags = Array.from(active);
+        let matchesCount = 0;
+        posts.forEach((post) => {
+          const tags = post.dataset.postTags.split(",");
+          const matches = mode === "or"
+            ? activeTags.some((tag) => tags.includes(tag))
+            : activeTags.every((tag) => tags.includes(tag));
+          if (matches) {
+            matchesCount += 1;
+          }
+          post.classList.toggle("hidden", !matches);
+        });
+        if (emptyState) {
+          emptyState.classList.toggle("hidden", matchesCount > 0);
+        }
+      };
+
+      const updateUrl = () => {
+        const activeTags = Array.from(active);
+        const primary = activeTags[0];
+        const params = new URLSearchParams();
+        params.set("tags", activeTags.join(","));
+        params.set("mode", mode);
+        history.replaceState(null, "", `/tag/${primary}?${params.toString()}`);
+        root.dataset.primaryTag = primary;
+      };
+
+      const updateSearchVisibility = () => {
+        if (!searchWrapper) return;
+        const shouldShow = active.size === 0;
+        searchWrapper.classList.toggle("hidden", !shouldShow);
+      };
+
+      const setEmptyState = () => {
+        searchActive = false;
+        posts.forEach((post) => post.classList.remove("hidden"));
+        if (filterUi) filterUi.classList.add("hidden");
+        if (titleEl) titleEl.textContent = "Latest Articles";
+        history.replaceState(null, "", "/blog");
+        if (clearButton) {
+          clearButton.hidden = true;
+        }
+        if (emptyState) {
+          emptyState.classList.add("hidden");
+        }
+        if (searchInput) {
+          searchInput.value = "";
+        }
+        setVisible(searchResults, false);
+        setVisible(searchEmpty, false);
+        setVisible(postList, true);
+        updateSearchVisibility();
+      };
+
+      const toggleTag = (tag) => {
+        if (active.has(tag)) {
+          active.delete(tag);
+        } else {
+          active.add(tag);
+        }
+        renderActive();
+        syncButtons();
+        if (active.size === 0) {
+          setEmptyState();
+          return;
+        }
+        if (searchInput) {
+          searchInput.value = "";
+        }
+        searchActive = false;
+        setVisible(searchResults, false);
+        setVisible(searchEmpty, false);
+        updateSearchVisibility();
+        if (filterUi) filterUi.classList.remove("hidden");
+        if (titleEl) titleEl.textContent = defaultTitle;
+        applyFilter();
+        updateUrl();
+      };
+
+      const setMode = (nextMode, { updateHistory = true } = {}) => {
+        mode = nextMode;
+        modeToggles.forEach((toggle) => {
+          toggle.dataset.mode = mode;
+          toggle.setAttribute("aria-checked", mode === "or" ? "true" : "false");
+          toggle.setAttribute("aria-label", `Filter mode: ${mode.toUpperCase()}`);
+        });
+        if (active.size === 0) {
+          setEmptyState();
+          return;
+        }
+        applyFilter();
+        if (updateHistory) {
+          updateUrl();
+        }
+      };
+
+      buttons.forEach((btn) => {
+        btn.addEventListener("click", () => toggleTag(btn.dataset.tag));
+      });
+
+      modeToggles.forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+          const nextMode = mode === "and" ? "or" : "and";
+          setMode(nextMode);
+        });
+      });
+
+      if (clearButton) {
+        clearButton.addEventListener("click", () => {
+          active.clear();
+          renderActive();
+          syncButtons();
+          setEmptyState();
+        });
+      }
+
+      renderActive();
+      syncButtons();
+      setMode(mode, { updateHistory: false });
+      updateSearchVisibility();
+
+      initBlogSearch({
+        allowSearch: () => active.size === 0,
+        onSearchStart: () => {
+          searchActive = true;
+          updateSearchVisibility();
+          if (filterUi) filterUi.classList.add("hidden");
+          if (titleEl) titleEl.textContent = "Latest Articles";
+        },
+        onSearchClear: () => {
+          if (active.size === 0) {
+            setEmptyState();
+            return;
+          }
+          searchActive = false;
+          updateSearchVisibility();
+          if (filterUi) filterUi.classList.remove("hidden");
+          if (titleEl) titleEl.textContent = defaultTitle;
+          applyFilter();
+        },
+        onSearchBlocked: () => {
+          searchActive = false;
+          updateSearchVisibility();
+        }
+      });
+    }
+  </script>
+</BaseLayout>
+

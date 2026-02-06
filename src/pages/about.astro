@@ -1,0 +1,224 @@
+﻿---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const getFullYearsSince = (startDate) => {
+  const now = new Date();
+  const yearDiff = now.getUTCFullYear() - startDate.getUTCFullYear();
+  const anniversary = new Date(Date.UTC(now.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate()));
+  return now >= anniversary ? yearDiff : Math.max(0, yearDiff - 1);
+};
+
+const yearsExperience = getFullYearsSince(new Date(Date.UTC(2018, 4, 1)));
+
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const certModules = import.meta.glob("../assets/certifications/*.{png,jpg,jpeg,svg,webp}", { eager: true });
+
+const certifications = Object.entries(certModules)
+  .map(([path, mod]) => {
+    const filename = path.split("/").pop() ?? "";
+    const base = filename.replace(/\.[^.]+$/, "");
+    const match = base.match(/^(\d{2})(\d{4})$/);
+    const month = match ? parseInt(match[1], 10) : null;
+    const year = match ? match[2] : "";
+    const label = month && month >= 1 && month <= 12 ? `${monthNames[month - 1]} ${year}` : base;
+    const sortKey = match ? parseInt(year, 10) * 100 + month : 0;
+    const resolved = mod?.default ?? mod;
+    const src = resolved?.src ?? resolved;
+    return {
+      src,
+      label,
+      alt: `Certification ${label}`,
+      sortKey
+    };
+  })
+  .sort((a, b) => b.sortKey - a.sortKey);
+
+const certificationSlides = certifications.length > 0 ? [...certifications, ...certifications] : [];
+---
+<BaseLayout title="About Me">
+  <section class="grid gap-8 lg:grid-cols-[240px_1fr]">
+    <div class="card-surface about-photo-column p-4">
+      <img
+        class="about-photo"
+        src="/images/wojciech-1.png"
+        alt="Wojciech Seweryn"
+        width="208"
+        height="260"
+        loading="lazy"
+        decoding="async"
+      />
+      <img
+        class="about-photo"
+        src="/images/wojciech-2.png"
+        alt="Traveling the world"
+        width="208"
+        height="260"
+        loading="lazy"
+        decoding="async"
+      />
+      <img
+        class="about-photo"
+        src="/images/wojciech-3.png"
+        alt="Tatra Mountains"
+        width="208"
+        height="260"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <div class="space-y-8">
+      <article class="prose lg:prose-lg">
+        <h1 class="page-title">About Me</h1>
+        <p>
+          I've been building software professionally for {yearsExperience} years, with a strong focus on .NET and
+          Optimizely (Episerver).
+        </p>
+        <p>
+          Over the years, I've delivered everything from large enterprise platforms to smaller, tailored
+          implementations. I enjoy working closely with clients - not only to meet requirements, but also to
+          uncover opportunities and implement improvements that make websites and digital products perform better.
+        </p>
+        <p>
+          My experience helps turn business goals into solid engineering decisions, so the solutions we build are
+          practical, measurable, and built to last.
+        </p>
+      </article>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div class="card-surface about-card p-5">
+          <p class="card-title mb-6 text-ink-900/70 dark:text-ink-200/70">Technical Snapshot</p>
+          <ul class="list-check space-y-2 text-sm text-ink-900/80 dark:text-ink-200/80">
+            <li>.NET development with Optimizely (Episerver)</li>
+            <li>Commerce Cloud + Content Cloud certified</li>
+            <li>Personalization, experimentation, measurement</li>
+            <li>Architecture, performance, and reliability</li>
+          </ul>
+        </div>
+        <div class="card-surface about-card p-5">
+          <p class="card-title mb-6 text-ink-900/70 dark:text-ink-200/70">Outside Work</p>
+          <ul class="list-check space-y-2 text-sm text-ink-900/80 dark:text-ink-200/80">
+            <li>Based in Poland</li>
+            <li>Happily married and a proud dad</li>
+            <li>Dungeons &amp; Dragons DM for 20+ years</li>
+            <li>Exploring generative AI and blockchain</li>
+          </ul>
+        </div>
+        <div class="card-surface card-muted about-card p-5 sm:col-span-2">
+          <p class="text-sm text-ink-900/70 dark:text-ink-200/70">
+            <span class="font-semibold">Fun fact:</span> my path into software was not a typical one. I hold an
+            M.Sc.Eng. degree in Bridge and Underground Structures, and before switching to tech, I spent several
+            years designing bridges in Poland.
+          </p>
+        </div>
+      </div>
+    </div>
+    {certifications.length > 0 && (
+      <div class="card-surface about-card p-4 lg:col-span-2">
+        <div class="cert-carousel" data-cert-carousel>
+          <div class="cert-track" data-cert-track>
+            {certifications.map((cert) => (
+              <div class="cert-item">
+                <div class="cert-image-frame">
+                  <img
+                    class="cert-image"
+                    src={cert.src}
+                    alt={cert.alt}
+                    loading="lazy"
+                    decoding="async"
+                    draggable="false"
+                  />
+                </div>
+                <div class="cert-caption">{cert.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )}
+  </section>
+  <script is:inline>
+    const carousel = document.querySelector("[data-cert-carousel]");
+    if (carousel instanceof HTMLElement) {
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const getStep = () => {
+        const first = carousel.querySelector(".cert-item");
+        if (!(first instanceof HTMLElement)) return 0;
+        const style = window.getComputedStyle(carousel);
+        const gap = parseFloat(style.getPropertyValue("--gap")) || 0;
+        return first.getBoundingClientRect().width + gap;
+      };
+
+      let step = 0;
+      let index = 0;
+      let timer = 0;
+
+      const tick = () => {
+        step = getStep();
+        if (!step) return;
+        const maxIndex = Math.max(0, carousel.querySelectorAll(".cert-item").length - 1);
+        index = index >= maxIndex ? 0 : index + 1;
+        carousel.scrollTo({ left: step * index, behavior: "smooth" });
+        timer = window.setTimeout(tick, 5200);
+      };
+
+      const scheduleAuto = (delay) => {
+        if (prefersReduced) return;
+        window.clearTimeout(timer);
+        timer = window.setTimeout(tick, delay);
+      };
+
+      const onResize = () => {
+        step = getStep();
+        carousel.scrollTo({ left: step * index, behavior: "auto" });
+      };
+
+      if (!prefersReduced) {
+        window.addEventListener("resize", onResize);
+        scheduleAuto(3600);
+      }
+
+      let dragging = false;
+      let startX = 0;
+      let startScroll = 0;
+
+      const onPointerDown = (event) => {
+        if (event.button !== undefined && event.button !== 0) return;
+        dragging = true;
+        carousel.classList.add("is-dragging");
+        startX = event.clientX;
+        startScroll = carousel.scrollLeft;
+        carousel.style.scrollBehavior = "auto";
+        window.clearTimeout(timer);
+        carousel.setPointerCapture(event.pointerId);
+      };
+
+      const onPointerMove = (event) => {
+        if (!dragging) return;
+        const delta = event.clientX - startX;
+        carousel.scrollLeft = startScroll - delta;
+      };
+
+      const endDrag = (event) => {
+        if (!dragging) return;
+        dragging = false;
+        carousel.classList.remove("is-dragging");
+        carousel.style.scrollBehavior = "smooth";
+        step = getStep();
+        if (step) {
+          index = Math.round(carousel.scrollLeft / step);
+        }
+        scheduleAuto(3600);
+        if (event.pointerId !== undefined) {
+          carousel.releasePointerCapture(event.pointerId);
+        }
+      };
+
+      carousel.addEventListener("pointerdown", onPointerDown);
+      carousel.addEventListener("pointermove", onPointerMove);
+      carousel.addEventListener("pointerup", endDrag);
+      carousel.addEventListener("pointercancel", endDrag);
+      carousel.addEventListener("dragstart", (event) => event.preventDefault());
+    }
+  </script>
+</BaseLayout>
+

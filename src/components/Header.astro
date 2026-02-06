@@ -1,0 +1,49 @@
+---
+import { Github, Rss, Linkedin, Sun, Moon } from "lucide-astro";
+---
+<header class="mx-auto max-w-4xl px-4 pt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+  <div class="flex flex-col gap-1">
+    <a href="/" class="flex items-center gap-3 font-semibold tracking-tight text-2xl">
+      <img
+        class="site-logo"
+        src="/images/ws-blog-logo.png"
+        alt="WS Blog logo"
+        width="200"
+        height="100"
+        loading="eager"
+        decoding="async"
+      />
+      Wojciech Seweryn
+    </a>
+    <p class="tagline text-ink-900/80 dark:text-ink-200/80">
+      I turn data into decisions - focusing on
+      <span
+        class="rotating-word"
+        data-rotating-words="Optimizely|AI|personalization|experimentation|backend engineering|A/B testing|feature flags|product analytics|metrics|recommendations|event tracking|optimization|performance|observability|reliability|scalability|clean architecture|smooth implementations"
+      >Optimizely</span>
+      <span class="rotating-caret" aria-hidden="true">|</span>
+    </p>
+  </div>
+  <nav class="flex flex-wrap items-center gap-4 text-sm sm:justify-end">
+    <a class="nav-link" href="/blog">Blog</a>
+    <a class="nav-link" href="/about">About Me</a>
+    <a class="nav-link" href="/contact">Contact</a>
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme" aria-pressed="false">
+      <span class="theme-toggle-track">
+        <span class="theme-toggle-thumb">
+          <Sun size={12} class="theme-icon theme-icon-sun" />
+          <Moon size={12} class="theme-icon theme-icon-moon" />
+        </span>
+      </span>
+    </button>
+    <a href="https://github.com/AI-Wojtech" aria-label="GitHub">
+      <Github size={18} />
+    </a>
+    <a href="https://www.linkedin.com/in/wojciechseweryn/" aria-label="LinkedIn">
+      <Linkedin size={18} />
+    </a>
+    <a href="/rss.xml" aria-label="RSS">
+      <Rss size={18} />
+    </a>
+  </nav>
+</header>

@@ -1,0 +1,73 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+<BaseLayout
+  title="Contact"
+  description="Have a question or a problem to solve? Feel free to reach out using the form below, or email me at wojtechseweryn@gmail.com."
+>
+  <article class="prose lg:prose-lg">
+    <h1 class="page-title">Contact</h1>
+    <p>
+      Have a question or a problem to solve? Feel free to reach out using the form below, or email me at
+      <a class="contact-link" href="mailto:wojtechseweryn@gmail.com">wojtechseweryn@gmail.com</a>
+    </p>
+  </article>
+
+  <form
+    class="mt-8 card card-tilt card-tilt-soft w-full"
+    data-tilt-card
+    data-contact-form
+    method="post"
+    action="mailto:wojtechseweryn@gmail.com"
+    enctype="text/plain"
+  >
+    <div class="card-surface p-6 grid gap-4">
+      <label class="text-sm font-medium">
+        Name
+        <input class="contact-input mt-2 w-full rounded-md border border-black/10 dark:border-white/10 p-2" type="text" name="name" />
+      </label>
+      <label class="text-sm font-medium">
+        Subject
+        <input class="contact-input mt-2 w-full rounded-md border border-black/10 dark:border-white/10 p-2" type="text" name="subject" required />
+      </label>
+      <label class="text-sm font-medium">
+        Message
+        <textarea class="contact-input mt-2 w-full rounded-md border border-black/10 dark:border-white/10 p-2 min-h-[140px]" name="message" required></textarea>
+      </label>
+      <button
+        class="mt-2 inline-flex items-center justify-center rounded-md bg-accent-600 text-white hover:bg-accent-500 px-4 py-2 text-sm font-semibold transition-colors dark:bg-accent-500 dark:text-ink-950 dark:hover:bg-accent-400"
+        type="submit"
+      >
+        Send
+      </button>
+      <p class="text-xs text-ink-800/70 dark:text-ink-200/70">
+        <em>This opens your email client and does not use cookies or external scripts.</em>
+      </p>
+    </div>
+  </form>
+
+  <script is:inline>
+    const form = document.querySelector("[data-contact-form]");
+    if (form instanceof HTMLFormElement) {
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const data = new FormData(form);
+        const name = String(data.get("name") || "").trim();
+        const subject = String(data.get("subject") || "").trim();
+        const message = String(data.get("message") || "").trim();
+        const action = form.getAttribute("action") || "";
+        const email = action.replace(/^mailto:/i, "");
+
+        const signature = name ? `\n\n--\n${name}` : "";
+        const body = `${message}${signature}`.trim();
+
+        const normalizeNewlines = (value) => value.replace(/\r?\n/g, "\r\n");
+        const subjectParam = subject ? `subject=${encodeURIComponent(subject)}` : "";
+        const bodyParam = body ? `body=${encodeURIComponent(normalizeNewlines(body))}` : "";
+        const query = [subjectParam, bodyParam].filter(Boolean).join("&");
+
+        window.location.href = `mailto:${email}${query ? `?${query}` : ""}`;
+      });
+    }
+  </script>
+</BaseLayout>

@@ -1,0 +1,80 @@
+﻿---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { getCollection } from "astro:content";
+
+const pageSize = 5;
+const allPosts = (await getCollection("blog"))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const pagePosts = allPosts.slice(0, pageSize);
+const pageCount = Math.max(1, Math.ceil(allPosts.length / pageSize));
+const currentPage = 1;
+const pageUrl = (page) => (page === 1 ? "/blog" : `/blog/page/${page}`);
+---
+<BaseLayout title="Blog">
+  <div class="page-header mb-8">
+    <h1 class="page-title">Latest Articles</h1>
+    <label class="search-bar">
+      <span class="sr-only">Search</span>
+      <span class="search-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M20 20l-3.5-3.5"></path>
+        </svg>
+      </span>
+      <input
+        class="search-input"
+        type="search"
+        placeholder="Search"
+        aria-label="Search posts"
+        data-search-input
+      />
+    </label>
+  </div>
+  <section class="grid gap-6" data-post-list>
+    {pagePosts.length > 0 ? (
+      pagePosts.map((post) => (
+        <div data-search-item data-title={post.data.title} data-description={post.data.description}>
+          <PostCard post={post} />
+        </div>
+      ))
+    ) : (
+      <div class="card-surface p-6 empty-state">
+        <h2 class="text-lg font-semibold">New posts coming soon</h2>
+        <p class="mt-2 text-sm text-ink-900/70 dark:text-ink-200/70">
+          I’m currently preparing the first articles - stay tuned
+        </p>
+      </div>
+    )}
+  </section>
+  <section class="grid gap-6 hidden" data-search-results></section>
+  <div class="card-surface p-6 hidden empty-state" data-search-empty>
+    <h2 class="text-lg font-semibold">No posts match your search</h2>
+    <p class="mt-2 text-sm text-ink-900/70 dark:text-ink-200/70">
+      Try a different keyword or clear the search field.
+    </p>
+  </div>
+  {pageCount > 1 && (
+    <nav class="mt-10 flex items-center justify-between text-sm" data-pagination>
+      <div>
+        {currentPage > 1 && (
+          <a class="tag-chip" href={pageUrl(currentPage - 1)}>Newer</a>
+        )}
+      </div>
+      <div class="text-xs text-ink-900/70 dark:text-ink-200/70">
+        Page {currentPage} of {pageCount}
+      </div>
+      <div>
+        {currentPage < pageCount && (
+          <a class="tag-chip" href={pageUrl(currentPage + 1)}>Older</a>
+        )}
+      </div>
+    </nav>
+  )}
+  <script>
+    import { initBlogSearch } from "../../utils/blogSearch";
+
+    initBlogSearch();
+  </script>
+</BaseLayout>
