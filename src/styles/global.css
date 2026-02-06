@@ -296,6 +296,22 @@ html.dark .about-photo {
   background: rgba(255,255,255,0.06);
 }
 
+@media (max-width: 640px) {
+  .about-photo {
+    aspect-ratio: 1 / 1;
+    max-width: 100%;
+  }
+
+  .about-photo-column {
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .about-photo-column .about-photo:nth-child(n + 2) {
+    display: none;
+  }
+}
+
 .list-check {
   list-style: none;
   padding: 0;
