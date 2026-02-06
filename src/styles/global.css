@@ -829,6 +829,13 @@ html.dark .cert-caption {
   line-height: 1.5;
 }
 
+.tagline-rotator {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  margin-left: 4px;
+}
+
 .site-logo {
   height: 40px;
   width: auto;
@@ -838,7 +845,6 @@ html.dark .cert-caption {
 .rotating-word {
   font-weight: 600;
   color: #1b9aaa;
-  margin-left: 4px;
 }
 
 html.dark .rotating-word {
@@ -849,6 +855,25 @@ html.dark .rotating-word {
   margin-left: 2px;
   opacity: 0.7;
   animation: caret-blink 1s step-end infinite;
+}
+
+@media (max-width: 640px) {
+  .tagline {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding-bottom: 6px;
+  }
+
+  .tagline-rotator {
+    margin-left: 0;
+  }
+
+  .rotating-word {
+    display: inline-block;
+    white-space: nowrap;
+  }
 }
 
 .nav-link {
