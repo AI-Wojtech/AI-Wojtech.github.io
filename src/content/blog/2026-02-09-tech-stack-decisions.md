@@ -25,7 +25,7 @@ Putting all of this together led me to the stack described below. Enjoy the read
 ## Astro
 [Astro](https://astro.build/) is my core framework. It is a **web framework for content-driven websites**, which makes it an ideal choice for blogs. By default, it ships almost no JavaScript and keeps pages extremely fast.
 
-![Astro performance cover](/images/astro.png)
+![Astro performance cover](../../assets/blog-images/01/astro.png)
 
 I really like the component model, while still being able to keep content in plain **Markdown**. I didn't want any databases and Astro’s Markdown-first approach turned out to be exactly what I needed. Rendering blog posts directly from Markdown feels simple, predictable, and perfectly aligned with my blogging needs.
 
@@ -36,14 +36,14 @@ The downside is that some dynamic features require extra client-side work, and t
 ## Tailwind CSS
 [Tailwind CSS](https://tailwindcss.com/) lets me build a clean UI without writing large CSS files, and it fits a design-first workflow very well. Iteration is fast, and keeping a consistent design system is straightforward.
 
-![Tailwind CSS](/images/tailwindcss.png)
+![Tailwind CSS](../../assets/blog-images/01/tailwindcss.png)
 
 Tailwind is a **utility-first CSS framework** that provides low-level building blocks instead of predefined components. The main trade-off is longer class strings and potentially less semantic HTML if you are not careful.
 
 ## Code Styling (Shiki)
 I use [Shiki](https://shiki.style/) for syntax highlighting so code snippets look consistent and readable. Highlighting happens at build time, which means zero runtime cost in the browser.
 
-![Shiki](/images/shiki.png)
+![Shiki](../../assets/blog-images/01/shiki.png)
 
 Example of how code looks when styled with Shiki:
 
@@ -92,7 +92,7 @@ The only downside is that compilation takes a little longer when multiple langua
 ## Hosting on GitHub Pages
 Hosting on GitHub Pages is **extremely important to me**. No hosting issues, no invoices, no surprises. It is free, proven, and backed by GitHub.
 
-![Github Pages](/images/githubPages.png)
+![Github Pages](../../assets/blog-images/01/githubPages.png)
 
 The setup is very simple: you create a dedicated repository for your site, spend a few minutes on configuration and you are done. This level of simplicity and reliability is exactly what I was looking for. No more complicated hosting configurations (at least for a simple blog!)
 
@@ -104,7 +104,7 @@ What is worth considering is that GitHub Pages is limited to static hosting (no 
 ## Comments via GitHub (giscus)
 For comments, I use **giscus**, which stores discussions in GitHub Discussions. This is another game changer when you do not want to introduce any databases.
 
-![Github Pages](/images/giscus.png)
+![Github Pages](../../assets/blog-images/01/giscus.png)
 
 Everything is handled on the GitHub side: authentication, moderation, and storage. Since this is a technical blog, I assume that most interested readers already have a GitHub account anyway.
 
