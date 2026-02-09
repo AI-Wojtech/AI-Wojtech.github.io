@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PostCard from "../../components/PostCard.astro";
+import GiscusComments from "../../components/GiscusComments.astro";
 import { getCollection } from "astro:content";
 import { getReadingTime } from "../../utils/readingTime";
 
@@ -60,6 +61,7 @@ const relatedPosts = (await getCollection("blog"))
     <hr />
     <Content />
   </article>
+  <GiscusComments />
   {relatedPosts.length >= 2 && (
     <section class="mt-12">
       <div class="section-divider" aria-hidden="true"></div>

@@ -1,0 +1,123 @@
+---
+const giscus = {
+  repo: import.meta.env.PUBLIC_GISCUS_REPO ?? "",
+  repoId: import.meta.env.PUBLIC_GISCUS_REPO_ID ?? "",
+  category: import.meta.env.PUBLIC_GISCUS_CATEGORY ?? "",
+  categoryId: import.meta.env.PUBLIC_GISCUS_CATEGORY_ID ?? "",
+  mapping: import.meta.env.PUBLIC_GISCUS_MAPPING ?? "pathname",
+  strict: import.meta.env.PUBLIC_GISCUS_STRICT ?? "0",
+  reactionsEnabled: import.meta.env.PUBLIC_GISCUS_REACTIONS ?? "1",
+  emitMetadata: import.meta.env.PUBLIC_GISCUS_EMIT_METADATA ?? "0",
+  inputPosition: import.meta.env.PUBLIC_GISCUS_INPUT_POSITION ?? "bottom",
+  theme: import.meta.env.PUBLIC_GISCUS_THEME ?? "preferred_color_scheme",
+  lang: import.meta.env.PUBLIC_GISCUS_LANG ?? "en"
+};
+
+const enabled = Boolean(giscus.repo && giscus.repoId && giscus.category && giscus.categoryId);
+---
+{enabled && (
+  <>
+    <section class="mt-12" id="comments" aria-label="Comments">
+      <div class="section-divider section-divider-strong" aria-hidden="true"></div>
+      <h2 class="page-title text-2xl">Comments</h2>
+      <div
+        class="mt-6 giscus"
+        data-giscus
+        data-repo={giscus.repo}
+        data-repo-id={giscus.repoId}
+        data-category={giscus.category}
+        data-category-id={giscus.categoryId}
+        data-mapping={giscus.mapping}
+        data-strict={giscus.strict}
+        data-reactions-enabled={giscus.reactionsEnabled}
+        data-emit-metadata={giscus.emitMetadata}
+        data-input-position={giscus.inputPosition}
+        data-theme={giscus.theme}
+        data-lang={giscus.lang}
+      ></div>
+    </section>
+    <script is:inline>
+      const giscusContainer = document.querySelector("[data-giscus]");
+      if (giscusContainer) {
+        const getGiscusTheme = () => {
+          const root = document.documentElement;
+          const mode = root.dataset.theme || (root.classList.contains("dark") ? "dark" : "light");
+          return mode === "dark" ? "dark_dimmed" : "light";
+        };
+
+        const setGiscusTheme = () => {
+          const iframe = document.querySelector("iframe.giscus-frame");
+          if (!(iframe instanceof HTMLIFrameElement)) return false;
+          iframe.contentWindow?.postMessage(
+            { giscus: { setConfig: { theme: getGiscusTheme() } } },
+            "https://giscus.app"
+          );
+          return true;
+        };
+
+        const applyThemeWhenReady = () => {
+          if (setGiscusTheme()) return;
+          window.setTimeout(applyThemeWhenReady, 200);
+        };
+
+        const observeThemeChanges = () => {
+          const root = document.documentElement;
+          const observer = new MutationObserver(() => {
+            setGiscusTheme();
+          });
+          observer.observe(root, { attributes: true, attributeFilter: ["class", "data-theme"] });
+        };
+
+        const loadGiscus = () => {
+          if (giscusContainer.dataset.loaded === "true") return;
+          const script = document.createElement("script");
+          script.src = "https://giscus.app/client.js";
+          script.async = true;
+          script.crossOrigin = "anonymous";
+
+          const attrMap = {
+            "data-repo": "repo",
+            "data-repo-id": "repoId",
+            "data-category": "category",
+            "data-category-id": "categoryId",
+            "data-mapping": "mapping",
+            "data-strict": "strict",
+            "data-reactions-enabled": "reactionsEnabled",
+            "data-emit-metadata": "emitMetadata",
+            "data-input-position": "inputPosition",
+            "data-theme": "theme",
+            "data-lang": "lang"
+          };
+
+          giscusContainer.dataset.theme = getGiscusTheme();
+          Object.entries(attrMap).forEach(([attr, key]) => {
+            const value = giscusContainer.dataset[key];
+            if (value) {
+              script.setAttribute(attr, value);
+            }
+          });
+
+          giscusContainer.appendChild(script);
+          giscusContainer.dataset.loaded = "true";
+          applyThemeWhenReady();
+          observeThemeChanges();
+        };
+
+        if ("IntersectionObserver" in window) {
+          const observer = new IntersectionObserver(
+            (entries, obs) => {
+              if (entries.some((entry) => entry.isIntersecting)) {
+                loadGiscus();
+                obs.disconnect();
+              }
+            },
+            { rootMargin: "200px 0px" }
+          );
+          observer.observe(giscusContainer);
+        } else {
+          loadGiscus();
+        }
+      }
+    </script>
+  </>
+)}

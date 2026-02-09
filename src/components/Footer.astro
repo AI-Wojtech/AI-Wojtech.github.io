@@ -6,26 +6,49 @@ import { Github, Rss, Linkedin, ChevronDown } from "lucide-astro";
     <div class="footer-left">
       <details class="footer-disclosure">
         <summary>
-          &copy; 2026 Wojciech Seweryn. Privacy-first - no cookies, no tracking.
+          &copy; 2026 Wojciech Seweryn. Analytics with consent.
           <span class="footer-disclosure-hint" aria-hidden="true">
             Details
             <ChevronDown size={14} class="footer-disclosure-icon" />
           </span>
         </summary>
         <div class="footer-banner">
-          <p>
-            I build data-driven personalization and experimentation for a living:
-          </p>
+          <p>I build data-driven personalization and experimentation for a living.</p>
           <p class="footer-banner-strong">
-            Optimizely, GTM, dataLayer, event tracking - the whole measurement stack.
+            Google Analytics runs only after you accept cookies in the consent banner.
           </p>
           <p class="footer-banner-spaced">
-            This blog is the exception - no cookies, no trackers, no tags. Just words.
+            Comments are powered by GitHub (giscus) and load separately from analytics.
           </p>
+          <p class="footer-banner-spaced">
+            Decline to browse without analytics cookies.
+          </p>
+          <div class="footer-consent" data-consent-controls hidden>
+            <p class="footer-banner-spaced footer-consent-title">Change analytics consent</p>
+            <div class="footer-consent-actions" role="group" aria-label="Change analytics consent">
+              <button
+                class="footer-consent-btn"
+                type="button"
+                data-consent-choice="granted"
+                aria-pressed="false"
+              >
+                Accept analytics
+              </button>
+              <button
+                class="footer-consent-btn"
+                type="button"
+                data-consent-choice="denied"
+                aria-pressed="false"
+              >
+                Decline
+              </button>
+            </div>
+          </div>
         </div>
       </details>
     </div>
     <div class="flex items-center gap-4">
+      <a class="footer-contact" href="/privacy-policy">Privacy Policy</a>
       <a class="footer-contact" href="/contact">Contact</a>
       <a href="https://github.com/AI-Wojtech" aria-label="GitHub">
         <Github size={18} />
