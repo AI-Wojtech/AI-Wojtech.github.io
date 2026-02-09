@@ -149,6 +149,7 @@ const enabled = Boolean(gaMeasurementId);
         if (consentControls) {
           const show = value === "granted" || value === "denied";
           consentControls.hidden = !show;
+          consentControls.setAttribute("aria-hidden", show ? "false" : "true");
         }
         consentButtons.forEach((button) => {
           const choice = button.getAttribute("data-consent-choice");
