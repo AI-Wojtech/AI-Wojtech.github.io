@@ -1,0 +1,263 @@
+---
+const gaMeasurementId = import.meta.env.PUBLIC_GA_ID ?? "";
+const enabled = Boolean(gaMeasurementId);
+---
+{enabled && (
+  <>
+    <div class="cookie-banner" data-cookie-banner hidden role="dialog" aria-live="polite" aria-label="Cookie consent">
+      <div class="cookie-banner-inner">
+        <div class="cookie-banner-copy">
+          <p class="cookie-banner-title">Analytics cookies</p>
+          <p class="cookie-banner-text">
+            I use Google Analytics to understand (in a privacy-friendly way) how people read this blog - for example which
+            pages are visited and how long they are read.
+          </p>
+          <p class="cookie-banner-text">
+            You can accept analytics cookies or decline and browse without tracking.
+          </p>
+        </div>
+        <div class="cookie-banner-actions">
+          <button class="cookie-btn cookie-btn-primary" type="button" data-cookie-accept>Accept analytics</button>
+          <button class="cookie-btn cookie-btn-ghost" type="button" data-cookie-decline>Decline</button>
+          <button class="cookie-btn cookie-btn-ghost" type="button" data-cookie-more aria-expanded="false">
+            Read more
+          </button>
+        </div>
+        <div class="cookie-banner-details" aria-hidden="true">
+          <p class="cookie-details-title">Analytics cookies - details</p>
+          <p class="cookie-details-text">
+            I use Google Analytics (provided by Google LLC) to get simple statistics about how this blog is used. This
+            helps me understand what content is useful and improve the site.
+          </p>
+          <p class="cookie-details-heading">What it measures</p>
+          <p class="cookie-details-text">Google Analytics may collect information such as:</p>
+          <ul class="cookie-details-list">
+            <li>Pages you visit and how you navigate the site</li>
+            <li>Time spent on pages</li>
+            <li>Approximate location (country or region)</li>
+            <li>Device type, browser, and operating system</li>
+            <li>Referral source (e.g. search engine or external link)</li>
+          </ul>
+          <p class="cookie-details-text">
+            I do not use this data for advertising and I do not try to identify individual visitors.
+          </p>
+          <p class="cookie-details-heading">IP anonymization</p>
+          <p class="cookie-details-text">
+            IP anonymization is enabled, which means your IP address is shortened before it is stored or processed.
+          </p>
+          <p class="cookie-details-heading">Data transfers</p>
+          <p class="cookie-details-text">
+            Because Google operates globally, analytics data may be processed outside the EU (including in the United
+            States). Google applies appropriate legal safeguards for such transfers.
+          </p>
+          <p class="cookie-details-heading">Legal basis</p>
+          <p class="cookie-details-text">Analytics cookies are used only with your consent (GDPR Art. 6(1)(a)).</p>
+          <p class="cookie-details-heading">Comments (giscus / GitHub)</p>
+          <p class="cookie-details-text">
+            This blog uses giscus for comments, which is powered by GitHub Discussions.
+          </p>
+          <p class="cookie-details-text">
+            When the comment section is loaded, your browser connects to GitHub servers. To post a comment or reaction,
+            you need a GitHub account and you may be asked to authorize the giscus application.
+          </p>
+          <p class="cookie-details-text">
+            Comment content and your GitHub username may become publicly visible on GitHub.
+          </p>
+          <p class="cookie-details-heading">Change your mind anytime</p>
+          <p class="cookie-details-text">
+            You can withdraw your analytics consent at any time by clearing cookies in your browser.
+          </p>
+          <p class="cookie-details-text">
+            For more details, see my
+            <a class="cookie-banner-link" href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+              Privacy Policy
+            </a>.
+          </p>
+        </div>
+      </div>
+    </div>
+    <script is:inline define:vars={{ gaMeasurementId }}>
+      const measurementId = gaMeasurementId || "";
+      const consentKey = "ga_consent";
+      const banner = document.querySelector("[data-cookie-banner]");
+      const acceptBtn = banner?.querySelector("[data-cookie-accept]");
+      const declineBtn = banner?.querySelector("[data-cookie-decline]");
+      const moreBtn = banner?.querySelector("[data-cookie-more]");
+      const details = banner?.querySelector(".cookie-banner-details");
+      const consentControls = document.querySelector("[data-consent-controls]");
+      const consentButtons = Array.from(document.querySelectorAll("[data-consent-choice]"));
+      const consentDays = 180;
+      let gaLoaded = false;
+
+      const getCookie = (name) => {
+        const match = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith(`${name}=`));
+        return match ? decodeURIComponent(match.split("=")[1]) : null;
+      };
+
+      const setCookie = (name, value, days) => {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString();
+        const secure = window.location.protocol === "https:" ? "; Secure" : "";
+        document.cookie = `${name}=${encodeURIComponent(value)}; Expires=${expires}; Path=/; SameSite=Lax${secure}`;
+      };
+
+      const clearCookie = (name) => {
+        const secure = window.location.protocol === "https:" ? "; Secure" : "";
+        document.cookie = `${name}=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/; SameSite=Lax${secure}`;
+      };
+
+      const getDeleteDomains = () => {
+        const host = window.location.hostname;
+        const domains = new Set();
+        if (host && host.includes(".")) {
+          domains.add(host);
+          domains.add(`.${host}`);
+          if (host.startsWith("www.")) {
+            const root = host.slice(4);
+            domains.add(root);
+            domains.add(`.${root}`);
+          }
+        }
+        return [null, ...domains];
+      };
+
+      const clearAnalyticsCookies = () => {
+        const names = document.cookie
+          .split("; ")
+          .map((pair) => pair.split("=")[0])
+          .filter(Boolean);
+        const domains = getDeleteDomains();
+        const isGaCookie = (name) =>
+          name === "_ga" ||
+          name === "_gid" ||
+          name === "_gat" ||
+          name.startsWith("_gat_") ||
+          name.startsWith("_ga_");
+        const secure = window.location.protocol === "https:" ? "; Secure" : "";
+
+        names.forEach((name) => {
+          if (!isGaCookie(name)) return;
+          domains.forEach((domain) => {
+            const domainAttr = domain ? `; Domain=${domain}` : "";
+            document.cookie = `${name}=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=/; SameSite=Lax${secure}${domainAttr}`;
+          });
+        });
+      };
+
+      const updateConsentControls = (value) => {
+        if (consentControls) {
+          const show = value === "granted" || value === "denied";
+          consentControls.hidden = !show;
+        }
+        consentButtons.forEach((button) => {
+          const choice = button.getAttribute("data-consent-choice");
+          const isActive = choice === value;
+          button.classList.toggle("is-active", isActive);
+          button.setAttribute("aria-pressed", isActive ? "true" : "false");
+        });
+      };
+
+      const showBanner = () => {
+        if (!banner) return;
+        banner.hidden = false;
+        banner.classList.remove("is-expanded");
+        if (details) {
+          details.setAttribute("aria-hidden", "true");
+        }
+        if (moreBtn) {
+          moreBtn.setAttribute("aria-expanded", "false");
+        }
+        requestAnimationFrame(() => {
+          banner.classList.add("is-visible");
+        });
+      };
+
+      const hideBanner = () => {
+        if (!banner) return;
+        banner.classList.remove("is-visible");
+        banner.classList.remove("is-expanded");
+        setTimeout(() => {
+          banner.hidden = true;
+        }, 200);
+      };
+
+      const setExpanded = (expanded) => {
+        if (!banner || !details) return;
+        banner.classList.toggle("is-expanded", expanded);
+        details.setAttribute("aria-hidden", expanded ? "false" : "true");
+        if (moreBtn) {
+          moreBtn.setAttribute("aria-expanded", expanded ? "true" : "false");
+        }
+      };
+
+      const loadAnalytics = () => {
+        if (!measurementId) return;
+        if (gaLoaded) return;
+        gaLoaded = true;
+
+        const gtagScript = document.createElement("script");
+        gtagScript.async = true;
+        gtagScript.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+        document.head.appendChild(gtagScript);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          window.dataLayer.push(arguments);
+        }
+        window.gtag = window.gtag || gtag;
+        gtag("js", new Date());
+        gtag("config", measurementId, { anonymize_ip: true });
+      };
+
+      const setConsent = (value) => {
+        clearCookie(consentKey);
+        setCookie(consentKey, value, consentDays);
+        updateConsentControls(value);
+        if (value === "granted") {
+          loadAnalytics();
+        } else if (value === "denied") {
+          clearAnalyticsCookies();
+        }
+        hideBanner();
+      };
+
+      if (measurementId) {
+        const stored = getCookie(consentKey);
+        updateConsentControls(stored);
+
+        if (stored === "granted") {
+          loadAnalytics();
+        } else if (stored === "denied") {
+          clearAnalyticsCookies();
+          hideBanner();
+        } else {
+          showBanner();
+        }
+
+        if (acceptBtn) {
+          acceptBtn.addEventListener("click", () => setConsent("granted"));
+        }
+        if (declineBtn) {
+          declineBtn.addEventListener("click", () => setConsent("denied"));
+        }
+        if (moreBtn) {
+          moreBtn.addEventListener("click", () => {
+            const expanded = banner?.classList.contains("is-expanded");
+            setExpanded(!expanded);
+          });
+        }
+        consentButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const choice = button.getAttribute("data-consent-choice");
+            if (choice === "granted" || choice === "denied") {
+              setConsent(choice);
+            }
+          });
+        });
+      } else if (banner) {
+        banner.remove();
+      }
+    </script>
+  </>
+)}
