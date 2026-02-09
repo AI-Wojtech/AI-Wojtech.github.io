@@ -1,5 +1,8 @@
-﻿---
+---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import aboutPhotoOne from "../assets/about/wojciech-1.png";
+import aboutPhotoTwo from "../assets/about/wojciech-2.png";
+import aboutPhotoThree from "../assets/about/wojciech-3.png";
 
 const getFullYearsSince = (startDate) => {
   const now = new Date();
@@ -40,7 +43,7 @@ const certificationSlides = certifications.length > 0 ? [...certifications, ...c
     <div class="card-surface about-photo-column p-4">
       <img
         class="about-photo"
-        src="/images/wojciech-1.png"
+        src={aboutPhotoOne.src}
         alt="Wojciech Seweryn"
         width="208"
         height="260"
@@ -49,7 +52,7 @@ const certificationSlides = certifications.length > 0 ? [...certifications, ...c
       />
       <img
         class="about-photo"
-        src="/images/wojciech-2.png"
+        src={aboutPhotoTwo.src}
         alt="Traveling the world"
         width="208"
         height="260"
@@ -58,7 +61,7 @@ const certificationSlides = certifications.length > 0 ? [...certifications, ...c
       />
       <img
         class="about-photo"
-        src="/images/wojciech-3.png"
+        src={aboutPhotoThree.src}
         alt="Tatra Mountains"
         width="208"
         height="260"
@@ -221,4 +224,5 @@ const certificationSlides = certifications.length > 0 ? [...certifications, ...c
     }
   </script>
 </BaseLayout>
+
 
