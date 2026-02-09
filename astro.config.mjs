@@ -23,8 +23,13 @@ export default defineConfig({
             ariaLabel: "Permalink"
           },
           content: {
-            type: "text",
-            value: "#"
+            type: "element",
+            tagName: "span",
+            properties: {
+              className: ["heading-anchor-icon"],
+              "aria-hidden": "true"
+            },
+            children: []
           }
         }
       ]

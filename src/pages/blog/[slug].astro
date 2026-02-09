@@ -32,6 +32,9 @@ const relatedPosts = (await getCollection("blog"))
 ---
 <BaseLayout title={title} description={description} canonical={Astro.url}>
   <div class="reading-progress" data-reading-progress></div>
+  <button class="back-to-top" type="button" data-back-to-top aria-label="Back to top">
+    <span class="back-to-top-icon" aria-hidden="true">↑</span>
+  </button>
   <article class="prose lg:prose-lg">
     <h1>{title}</h1>
     <p class="text-sm text-ink-900/70 dark:text-ink-200/70">
@@ -48,7 +51,7 @@ const relatedPosts = (await getCollection("blog"))
     </div>
     {toc.length > 0 && (
       <nav class="toc not-prose" aria-label="Table of contents">
-        <div class="toc-title">On this page</div>
+        <div class="toc-title">Table of contents</div>
         <ul class="toc-list">
           {toc.map((heading) => (
             <li class={`toc-item depth-${heading.depth}`}>
@@ -77,3 +80,38 @@ const relatedPosts = (await getCollection("blog"))
     </section>
   )}
 </BaseLayout>
+
+<script is:inline>
+  (() => {
+    const button = document.querySelector("[data-back-to-top]");
+    if (!button) return;
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let ticking = false;
+
+    const update = () => {
+      const doc = document.documentElement;
+      const scrollTop = doc.scrollTop || document.body.scrollTop;
+      const height = doc.scrollHeight - doc.clientHeight;
+      const threshold = Math.min(640, height * 0.3);
+      const shouldShow = height > 600 && scrollTop > threshold;
+      button.classList.toggle("is-visible", shouldShow);
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    button.addEventListener("click", () => {
+      const behavior = prefersReduced ? "auto" : "smooth";
+      window.scrollTo({ top: 0, behavior });
+    });
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+  })();
+</script>

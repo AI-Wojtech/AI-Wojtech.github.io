@@ -3,12 +3,14 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import CookieBanner from "../components/CookieBanner.astro";
+import ogImage from "../assets/about/wojciech-1.png";
 
 const { title, description, canonical } = Astro.props;
 const siteTitle = "Wojciech Seweryn";
 const metaTitle = title ? `${title} | ${siteTitle}` : siteTitle;
 const metaDescription = description ?? "A minimalist technical blog about personalization and optimization.";
 const canonicalUrl = canonical ?? Astro.url;
+const ogImageUrl = new URL(ogImage.src ?? ogImage, Astro.site ?? Astro.url).toString();
 ---
 <!doctype html>
 <html lang="en">
@@ -23,7 +25,7 @@ const canonicalUrl = canonical ?? Astro.url;
     <meta property="og:description" content={metaDescription} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
-    <meta property="og:image" content="https://wseweryn.dev/images/wojciech-1.png" />
+    <meta property="og:image" content={ogImageUrl} />
     <meta property="og:image:alt" content="Wojciech Seweryn" />
     <script is:inline>
       (() => {
@@ -241,6 +243,10 @@ const canonicalUrl = canonical ?? Astro.url;
             const clone = document.createElement("img");
             clone.src = img.getAttribute("src") ?? "";
             clone.alt = img.getAttribute("alt") ?? "";
+            clone.addEventListener("click", (event) => {
+              event.stopPropagation();
+              overlay.classList.toggle("is-zoomed");
+            });
             overlay.appendChild(clone);
             overlay.addEventListener("click", (event) => {
               if (event.target === overlay) close();

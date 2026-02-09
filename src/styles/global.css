@@ -158,6 +158,10 @@ html.dark .search-icon {
   transition: opacity 120ms ease, color 120ms ease;
 }
 
+.heading-anchor-icon::after {
+  content: "#";
+}
+
 .prose h2:hover .heading-anchor,
 .prose h3:hover .heading-anchor,
 .prose h4:hover .heading-anchor,
@@ -195,29 +199,34 @@ html.dark .search-icon {
   padding-top: 2.4rem;
 }
 
+.prose ul li::marker,
+.prose ol li::marker {
+  color: rgba(15,20,28,0.75);
+}
+
 .prose hr {
   border-color: rgba(0,0,0,0.18);
 }
 
 .toc {
   margin-top: 1.5rem;
-  padding: 14px 16px;
+  padding: 12px 14px;
   border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.12);
-  background: rgba(255,255,255,0.7);
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(248,250,252,0.8);
 }
 
 .toc-title {
-  font-size: 11px;
-  letter-spacing: 0.16em;
+  font-size: 12px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(15,20,28,0.6);
-  margin-bottom: 8px;
+  color: rgba(15,20,28,0.52);
+  margin-bottom: 6px;
 }
 
 .toc-list {
   display: grid;
-  gap: 6px;
+  gap: 4px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -233,7 +242,7 @@ html.dark .search-icon {
 }
 
 .toc-link {
-  color: #0f141c;
+  color: rgba(15,20,28,0.82);
   text-decoration: none;
 }
 
@@ -244,6 +253,11 @@ html.dark .search-icon {
 
 html.dark .prose hr {
   border-color: rgba(255,255,255,0.18);
+}
+
+html.dark .prose ul li::marker,
+html.dark .prose ol li::marker {
+  color: rgba(215,221,231,0.75);
 }
 
 html.dark .toc {
@@ -379,14 +393,89 @@ html.dark .card-muted {
   transition: transform 120ms linear;
 }
 
+@media (min-width: 768px) {
+  .reading-progress {
+    height: 5px;
+  }
+}
+
 html:not(.dark) .reading-progress.is-scrolling {
   background: linear-gradient(90deg, rgba(34,182,199,1), rgba(34,182,199,0.55));
   box-shadow: 0 2px 8px rgba(34,182,199,0.4);
 }
 
+.back-to-top {
+  position: fixed;
+  right: 22px;
+  bottom: 26px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.18);
+  background: rgba(255,255,255,0.88);
+  color: rgba(15,20,28,0.8);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.14);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease, border-color 120ms ease, background 120ms ease, color 120ms ease;
+  z-index: 55;
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  border-color: rgba(34, 182, 199, 0.6);
+  background: rgba(34, 182, 199, 0.12);
+  color: #0f141c;
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid rgba(34, 182, 199, 0.5);
+  outline-offset: 2px;
+}
+
+.back-to-top-icon {
+  font-size: 16px;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
 html.dark .reading-progress {
   background: linear-gradient(90deg, rgba(62,214,229,0.95), rgba(62,214,229,0.45));
   box-shadow: 0 2px 6px rgba(62,214,229,0.25);
+}
+
+html.dark .back-to-top {
+  border-color: rgba(255,255,255,0.22);
+  background: rgba(15,20,28,0.78);
+  color: rgba(215,221,231,0.9);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+}
+
+html.dark .back-to-top:hover {
+  border-color: rgba(62, 214, 229, 0.6);
+  background: rgba(62, 214, 229, 0.16);
+  color: #eef2f8;
+}
+
+html.dark .back-to-top:focus-visible {
+  outline-color: rgba(62, 214, 229, 0.6);
+}
+
+@media (max-width: 640px) {
+  .back-to-top {
+    right: 16px;
+    bottom: 18px;
+    width: 36px;
+    height: 36px;
+  }
 }
 
 html.dark .section-divider {
@@ -463,11 +552,25 @@ html.dark .prose img {
 }
 
 .lightbox img {
-  max-width: min(92vw, 1100px);
-  max-height: 86vh;
+  max-width: min(96vw, 1400px);
+  max-height: 90vh;
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.25);
   box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  cursor: zoom-in;
+  transition: transform 180ms ease;
+  transform-origin: center;
+}
+
+.lightbox.is-zoomed img {
+  transform: scale(1.28);
+  cursor: zoom-out;
+}
+
+@media (max-width: 640px) {
+  .lightbox.is-zoomed img {
+    transform: scale(1.12);
+  }
 }
 
 html.dark .prose {
