@@ -145,6 +145,10 @@ The downside is the consent banner and the need to properly clean up cookies whe
 
 This is a brief overview of the technologies used for this blog. It's about predictability, performance, and low maintenance costs.
 
+![Lighthouse](../../assets/blog-images/01/lighthouse.png)
+
+The rapid verification of PROD speaks for itself. The stats are close to perfect and the slight drop in accessibility to 96 is only because the comments in Shiki have too little contrast. I have no complaints.
+
 I deliberately chose tools that don't get in the way of my work and allow me to focus on writing and experimenting. I wanted to achieve an efficient website that is pleasing to the eye, with readable posts and an extremely simple way of adding them (one push of a Markdown file and I have another post LIVE!).
 
 What's more, I had never used most of the technologies mentioned here before, a little break from the daily routine is a really great thing!
