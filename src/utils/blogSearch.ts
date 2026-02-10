@@ -1,3 +1,5 @@
+import { formatShortDate } from "./formatDate";
+
 type SearchPost = {
   title: string;
   description: string;
@@ -158,7 +160,7 @@ export const initBlogSearch = (options: BlogSearchOptions = {}): BlogSearchContr
     meta.className = "text-xs text-ink-900/70 dark:text-ink-200/70";
     const time = doc.createElement("time");
     time.dateTime = post.pubDate;
-    time.textContent = new Date(post.pubDate).toLocaleDateString("en-US");
+    time.textContent = formatShortDate(new Date(post.pubDate));
     const dot = doc.createElement("span");
     dot.textContent = " \u00b7 ";
     dot.setAttribute("aria-hidden", "true");

@@ -1,5 +1,6 @@
 ---
 import { getReadingTime } from "../utils/readingTime";
+import { formatShortDate } from "../utils/formatDate";
 
 const { post, class: className = "", ...rest } = Astro.props;
 const { title, description, pubDate, tags } = post.data;
@@ -20,7 +21,7 @@ const { minutes } = getReadingTime(post.body ?? "");
         <p class="mt-2 text-sm text-ink-900/80 dark:text-ink-200/80">{description}</p>
       </a>
       <div class="text-xs text-ink-900/70 dark:text-ink-200/70">
-        <time datetime={pubDate.toISOString()}>{pubDate.toLocaleDateString("en-US")}</time>
+        <time datetime={pubDate.toISOString()}>{formatShortDate(pubDate)}</time>
         <span aria-hidden="true"> · </span>
         <span>{minutes} min read</span>
       </div>

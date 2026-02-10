@@ -4,6 +4,7 @@ import PostCard from "../../components/PostCard.astro";
 import GiscusComments from "../../components/GiscusComments.astro";
 import { getCollection } from "astro:content";
 import { getReadingTime } from "../../utils/readingTime";
+import { formatShortDate } from "../../utils/formatDate";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -38,7 +39,7 @@ const relatedPosts = (await getCollection("blog"))
   <article class="prose lg:prose-lg">
     <h1>{title}</h1>
     <p class="text-sm text-ink-900/70 dark:text-ink-200/70">
-      <time datetime={pubDate.toISOString()}>{pubDate.toLocaleDateString("en-US")}</time>
+      <time datetime={pubDate.toISOString()}>{formatShortDate(pubDate)}</time>
       <span aria-hidden="true"> · </span>
       <span>{minutes} min read</span>
     </p>
