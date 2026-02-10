@@ -11,6 +11,9 @@ const pagePosts = allPosts.slice(0, pageSize);
 const pageCount = Math.max(1, Math.ceil(allPosts.length / pageSize));
 const currentPage = 1;
 const pageUrl = (page) => (page === 1 ? "/" : `/blog/page/${page}`);
+const placeholderTitle = "New posts coming soon";
+const placeholderBody = "I am currently preparing further articles – stay tuned.";
+const showPlaceholder = allPosts.length > 0 && allPosts.length < 4;
 ---
 <BaseLayout title="Home" description="A minimalist, ultra-fast technical blog.">
   <section class="mb-12">
@@ -37,16 +40,26 @@ const pageUrl = (page) => (page === 1 ? "/" : `/blog/page/${page}`);
 
   <section class="grid gap-6" data-post-list>
     {pagePosts.length > 0 ? (
-      pagePosts.map((post) => (
-        <div data-search-item data-title={post.data.title} data-description={post.data.description}>
-          <PostCard post={post} />
-        </div>
-      ))
+      <>
+        {pagePosts.map((post) => (
+          <div data-search-item data-title={post.data.title} data-description={post.data.description}>
+            <PostCard post={post} />
+          </div>
+        ))}
+        {showPlaceholder && (
+          <div class="card-surface p-6 empty-state">
+            <h2 class="text-lg font-semibold">{placeholderTitle}</h2>
+            <p class="mt-2 text-sm text-ink-900/70 dark:text-ink-200/70">
+              {placeholderBody}
+            </p>
+          </div>
+        )}
+      </>
     ) : (
       <div class="card-surface p-6 empty-state">
-        <h2 class="text-lg font-semibold">New posts coming soon</h2>
+        <h2 class="text-lg font-semibold">{placeholderTitle}</h2>
         <p class="mt-2 text-sm text-ink-900/70 dark:text-ink-200/70">
-          I’m currently preparing the first articles - stay tuned.
+          {placeholderBody}
         </p>
       </div>
     )}
