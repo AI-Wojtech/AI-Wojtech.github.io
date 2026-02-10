@@ -30,9 +30,28 @@ html.dark body {
 }
 
 .prose a {
-  color: #0b0d12;
+  position: relative;
+  color: #22b6c7;
   text-decoration: none;
   transition: color 120ms ease;
+}
+
+.prose a:not(.tag-chip)::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(34,182,199,0.6), rgba(34,182,199,0.2));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 160ms ease;
+}
+
+.prose a:not(.tag-chip):hover::after,
+.prose a:not(.tag-chip):focus-visible::after {
+  transform: scaleX(1);
 }
 
 .page-title {
@@ -578,11 +597,15 @@ html.dark .prose {
 }
 
 html.dark .prose a {
-  color: #7ee2ec;
+  color: #22b6c7;
 }
 
 html.dark .prose a:hover {
-  color: #3ed6e5;
+  color: #22b6c7;
+}
+
+html.dark .prose a:not(.tag-chip)::after {
+  background: linear-gradient(90deg, rgba(62,214,229,0.7), rgba(62,214,229,0.3));
 }
 
 html.dark .prose h1,
