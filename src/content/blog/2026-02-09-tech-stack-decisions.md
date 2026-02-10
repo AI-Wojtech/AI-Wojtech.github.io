@@ -16,8 +16,8 @@ About eight years ago, my blog was built on WordPress, hosted on OVH. Looking ba
 
 Now, approaching the topic again, I started by looking for ways to **minimize costs as much as possible**. Step by step, the technology stack began to shape itself naturally. I had a few key requirements:
 
-- **low cost**, 
-- **high performance**,
+- **low cost**
+- **high performance**
 - **full freedom when it comes to UI and UX design** 
 
 Putting all of this together led me to the stack described below. Enjoy the read!
