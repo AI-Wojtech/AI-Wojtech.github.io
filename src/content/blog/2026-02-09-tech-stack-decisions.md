@@ -102,7 +102,7 @@ https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-gi
 What is worth considering is that GitHub Pages is limited to static hosting (no custom backend code, databases, or server-side rendering), but that doesn’t bother me at all because I’m just building a simple blog.
 
 ## Comments via GitHub (giscus)
-For comments, I use **giscus**, which stores discussions in GitHub Discussions. This is another game changer when you do not want to introduce any databases.
+For comments, I use [giscus](https://giscus.app/), which stores discussions in GitHub Discussions. This is another game changer when you do not want to introduce any databases.
 
 ![Github Pages](../../assets/blog-images/01/giscus.png)
 
@@ -151,8 +151,6 @@ The rapid verification of PROD speaks for itself. The stats are close to perfect
 
 I deliberately chose tools that don't get in the way of my work and allow me to focus on writing and experimenting. I wanted to achieve an efficient website that is pleasing to the eye, with readable posts and an extremely simple way of adding them (one push of a Markdown file and I have another post LIVE!).
 
-What's more, I had never used most of the technologies mentioned here before, a little break from the daily routine is a really great thing!
-
-For a personal technical blog that I actually want to run for a long time, this seems like a very fair deal to me.
+What's more, I had never used most of the technologies mentioned here before, a little break from the daily routine is a really great thing! For a personal technical blog that I actually want to run for a long time, this seems like a very fair deal to me.
 
 If you have any questions about the details, feel free to leave a comment or contact me via the Contact tab.
