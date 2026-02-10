@@ -48,6 +48,21 @@ const enabled = Boolean(giscus.repo && giscus.repoId && giscus.category && giscu
         const setGiscusTheme = () => {
           const iframe = document.querySelector("iframe.giscus-frame");
           if (!(iframe instanceof HTMLIFrameElement)) return false;
+          const src = iframe.getAttribute("src") || "";
+          if (!src.startsWith("https://giscus.app")) {
+            if (!iframe.dataset.themeListener) {
+              iframe.dataset.themeListener = "true";
+              iframe.addEventListener(
+                "load",
+                () => {
+                  delete iframe.dataset.themeListener;
+                  setGiscusTheme();
+                },
+                { once: true }
+              );
+            }
+            return false;
+          }
           iframe.contentWindow?.postMessage(
             { giscus: { setConfig: { theme: getGiscusTheme() } } },
             "https://giscus.app"
