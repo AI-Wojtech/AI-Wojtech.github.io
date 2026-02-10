@@ -3,9 +3,9 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
+    "dev": "node scripts/copy-blog-images.mjs && astro dev",
+    "build": "node scripts/copy-blog-images.mjs && astro build",
+    "preview": "node scripts/copy-blog-images.mjs && astro preview"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.1",
