@@ -2,7 +2,7 @@
 title: "ODP Real-Time Audiences: What Changed from Real-Time Segments and How I Implemented It"
 description: "A practical guide to the Real-Time Segments to Real-Time Audiences shift in ODP, with a CMS implementation walkthrough."
 pubDate: 2026-03-09
-tags: ["optimizely", "odp", "real-time-audiences", "feature-experimentation", "cms"]
+tags: ["Optimizely", "ODP", "Real-Time-Audiences", "Feature-Experimentation", "CMS"]
 draft: false
 ---
 ## A small name change that is actually important
