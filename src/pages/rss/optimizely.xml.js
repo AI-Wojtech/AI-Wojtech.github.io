@@ -3,11 +3,17 @@ import { getCollection } from "astro:content";
 
 export async function GET(context) {
   const posts = (await getCollection("blog"))
-    .filter((p) => !p.data.draft && p.data.tags.includes("optimizely"))
+    .filter((p) => {
+      if (p.data.draft) {
+        return false;
+      }
+
+      return p.data.tags.some((tag) => tag.toLowerCase() === "optimizely");
+    })
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
   return rss({
-    title: "Wojciech Seweryn - Optimizely",
+    title: "Wojciech Seweryn Blog",
     description: "Posts tagged optimizely.",
     site: context.site,
     items: posts.map((post) => ({
