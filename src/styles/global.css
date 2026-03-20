@@ -216,6 +216,11 @@ html.dark .search-icon {
   padding: 0.1em 0.35em;
 }
 
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+
 .prose pre {
   @apply rounded-lg border border-black/10 dark:border-white/10;
   position: relative;
@@ -794,18 +799,34 @@ html.dark .empty-state {
   --tilt-glow: 1;
 }
 
+.card-tilt {
+  --glow-color: 34, 182, 199;
+}
+
+.card-tilt--optimizely {
+  --glow-color: 0, 80, 255;
+}
+
+.card-tilt--ai {
+  --glow-color: 212, 175, 55;
+}
+
+.card-tilt--astro {
+  --glow-color: 124, 58, 237;
+}
+
 .card-tilt::before {
   content: "";
   position: absolute;
-  inset: -8px;
+  inset: -18px;
   border-radius: 20px;
   background:
-    radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(34, 182, 199, 0.45),
-    rgba(34, 182, 199, 0.12) 45%,
-    rgba(34, 182, 199, 0.0) 70%),
-    rgba(34, 182, 199, 0.10);
-  filter: blur(14px);
+    radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(var(--glow-color), 0.55),
+    rgba(var(--glow-color), 0.18) 45%,
+    rgba(var(--glow-color), 0.0) 72%),
+    rgba(var(--glow-color), 0.12);
+  filter: blur(18px);
   opacity: 0;
   transform: translate(
     calc(var(--ox, 0px) * var(--tilt-glow, 1)),
@@ -833,6 +854,79 @@ html.dark .empty-state {
 
 .card-tilt:hover::before {
   opacity: 1;
+}
+
+/* ── Post label (vertical tag strip on left) ── */
+.post-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  min-width: 36px;
+  border-radius: 10px 0 0 10px;
+  padding: 10px 0;
+  position: relative;
+  overflow: hidden;
+  transition: width 200ms ease, min-width 200ms ease;
+  flex-shrink: 0;
+
+  /* default fallback color */
+  --label-bg: rgba(100, 116, 139, 0.12);
+  --label-color: rgba(100, 116, 139, 0.6);
+  background: var(--label-bg);
+}
+
+.post-label-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--label-color);
+  white-space: nowrap;
+  transition: color 200ms ease, letter-spacing 200ms ease;
+  user-select: none;
+}
+
+.card-tilt:hover .post-label {
+  width: 42px;
+  min-width: 42px;
+}
+
+.card-tilt:hover .post-label-text {
+  letter-spacing: 0.14em;
+}
+
+/* Optimizely — blue brand */
+.post-label--optimizely {
+  --label-bg: rgba(0, 55, 255, 0.08);
+  --label-color: rgba(0, 55, 255, 0.55);
+}
+html.dark .post-label--optimizely {
+  --label-bg: rgba(80, 130, 255, 0.12);
+  --label-color: rgba(120, 170, 255, 0.7);
+}
+
+/* AI — metallic gold */
+.post-label--ai {
+  --label-bg: rgba(212, 175, 55, 0.38);
+  --label-color: #96710f;
+}
+html.dark .post-label--ai {
+  --label-bg: rgba(212, 175, 55, 0.30);
+  --label-color: #d4af37;
+}
+
+/* astro — purple brand */
+.post-label--astro {
+  --label-bg: rgba(124, 58, 237, 0.08);
+  --label-color: rgba(124, 58, 237, 0.55);
+}
+html.dark .post-label--astro {
+  --label-bg: rgba(167, 139, 250, 0.12);
+  --label-color: rgba(196, 181, 253, 0.75);
 }
 
 .cert-carousel {

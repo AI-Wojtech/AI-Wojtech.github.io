@@ -5,17 +5,26 @@ import { formatShortDate } from "../utils/formatDate";
 const { post, class: className = "", ...rest } = Astro.props;
 const { title, description, pubDate, tags } = post.data;
 const { minutes } = getReadingTime(post.body ?? "");
+
+const primaryTag = tags?.[0] ?? "";
+
+const tagSlug = primaryTag.toLowerCase();
 ---
 <article
-  class={`card card-tilt ${className}`.trim()}
+  class={`card card-tilt card-tilt--${tagSlug} ${className}`.trim()}
   data-tilt-card
   data-card-click
   data-card-url={`/blog/${post.slug}`}
   tabindex="0"
   {...rest}
 >
-  <div class="card-surface p-6">
-    <div class="flex flex-col gap-3">
+  <div class="card-surface flex gap-0">
+    {primaryTag && (
+      <div class={`post-label post-label--${tagSlug}`} aria-hidden="true">
+        <span class="post-label-text">{primaryTag}</span>
+      </div>
+    )}
+    <div class="flex flex-col gap-3 flex-1 min-w-0 p-6">
       <a href={`/blog/${post.slug}`} class="block">
         <h3 class="text-lg font-semibold">{title}</h3>
         <p class="mt-2 text-sm text-ink-900/80 dark:text-ink-200/80">{description}</p>
