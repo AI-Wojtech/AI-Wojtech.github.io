@@ -210,6 +210,10 @@ html.dark .search-icon {
 
 .prose code {
   @apply font-mono text-[0.9em];
+  background: rgba(0, 0, 0, 0.06);
+  color: #1a2030;
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
 }
 
 .prose pre {
@@ -594,6 +598,11 @@ html.dark .prose img {
 
 html.dark .prose {
   color: #d7dde7;
+}
+
+html.dark .prose :not(pre) > code {
+  background: rgba(255, 255, 255, 0.12);
+  color: #e8edf5;
 }
 
 html.dark .prose a {
