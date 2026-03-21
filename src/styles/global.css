@@ -919,6 +919,20 @@ html.dark .post-label--ai {
   --label-color: #d4af37;
 }
 
+/* Optimizely + AI — diagonal blue→gold */
+.post-label--optimizely-ai {
+  background: linear-gradient(170deg, rgba(212, 175, 55, 0.38) 0%, rgba(212, 175, 55, 0.08) 45%, rgba(0, 80, 255, 0.22) 100%) !important;
+  --label-color: #7a6010;
+}
+html.dark .post-label--optimizely-ai {
+  background: linear-gradient(170deg, rgba(212, 175, 55, 0.30) 0%, rgba(80, 130, 255, 0.10) 45%, rgba(80, 130, 255, 0.28) 100%) !important;
+  --label-color: #c8a830;
+}
+
+.card-tilt--optimizely-ai {
+  --glow-color: 100, 130, 220;
+}
+
 /* astro — purple brand */
 .post-label--astro {
   --label-bg: rgba(124, 58, 237, 0.08);
