@@ -129,18 +129,37 @@ export const initBlogSearch = (options: BlogSearchOptions = {}): BlogSearchContr
   };
 
   const createCard = (post: SearchPost) => {
+    const tagSlugs = (post.tags ?? []).map((t) => t.toLowerCase());
+    const hasOptimizely = tagSlugs.includes("optimizely");
+    const hasAI = tagSlugs.includes("ai");
+    const isOptimizelyAI = hasOptimizely && hasAI;
+    const primaryTag = post.tags?.[0] ?? "";
+    const tagSlug = isOptimizelyAI ? "optimizely-ai" : primaryTag.toLowerCase();
+    const labelText = isOptimizelyAI ? "Optimizely · AI" : primaryTag;
+
     const article = doc.createElement("article");
-    article.className = "card card-tilt";
+    article.className = `card card-tilt card-tilt--${tagSlug}`;
     article.setAttribute("data-tilt-card", "");
     article.setAttribute("data-card-click", "");
     article.dataset.cardUrl = post.url;
     article.tabIndex = 0;
 
     const surface = doc.createElement("div");
-    surface.className = "card-surface p-6";
+    surface.className = "card-surface flex gap-0";
+
+    if (primaryTag) {
+      const label = doc.createElement("div");
+      label.className = `post-label post-label--${tagSlug}`;
+      label.setAttribute("aria-hidden", "true");
+      const labelSpan = doc.createElement("span");
+      labelSpan.className = "post-label-text";
+      labelSpan.textContent = labelText;
+      label.append(labelSpan);
+      surface.append(label);
+    }
 
     const stack = doc.createElement("div");
-    stack.className = "flex flex-col gap-3";
+    stack.className = "flex flex-col gap-3 flex-1 min-w-0 p-6";
 
     const link = doc.createElement("a");
     link.href = post.url;
@@ -183,6 +202,7 @@ export const initBlogSearch = (options: BlogSearchOptions = {}): BlogSearchContr
     stack.append(link, meta, tags);
     surface.append(stack);
     article.append(surface);
+
     attachCardInteractions(article);
     return article;
   };
