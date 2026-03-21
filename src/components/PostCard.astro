@@ -7,8 +7,14 @@ const { title, description, pubDate, tags } = post.data;
 const { minutes } = getReadingTime(post.body ?? "");
 
 const primaryTag = tags?.[0] ?? "";
+const tagSlugs = (tags ?? []).map((t: string) => t.toLowerCase());
 
-const tagSlug = primaryTag.toLowerCase();
+const hasOptimizely = tagSlugs.includes("optimizely");
+const hasAI = tagSlugs.includes("ai");
+const isOptimizelyAI = hasOptimizely && hasAI;
+
+const tagSlug = isOptimizelyAI ? "optimizely-ai" : primaryTag.toLowerCase();
+const labelText = isOptimizelyAI ? "Optimizely · AI" : primaryTag;
 ---
 <article
   class={`card card-tilt card-tilt--${tagSlug} ${className}`.trim()}
@@ -21,7 +27,7 @@ const tagSlug = primaryTag.toLowerCase();
   <div class="card-surface flex gap-0">
     {primaryTag && (
       <div class={`post-label post-label--${tagSlug}`} aria-hidden="true">
-        <span class="post-label-text">{primaryTag}</span>
+        <span class="post-label-text">{labelText}</span>
       </div>
     )}
     <div class="flex flex-col gap-3 flex-1 min-w-0 p-6">
