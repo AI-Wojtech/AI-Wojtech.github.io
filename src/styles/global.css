@@ -1113,6 +1113,22 @@ html.dark .rotating-word {
   color: #3ed6e5;
 }
 
+/* Optimizely — blue, good contrast light+dark */
+.rotating-word--optimizely {
+  color: #0040cc;
+}
+html.dark .rotating-word--optimizely {
+  color: #6699ff;
+}
+
+/* AI — gold, good contrast light+dark */
+.rotating-word--ai {
+  color: #96710f;
+}
+html.dark .rotating-word--ai {
+  color: #d4af37;
+}
+
 .rotating-caret {
   margin-left: 2px;
   opacity: 0.7;
