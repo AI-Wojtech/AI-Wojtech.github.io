@@ -134,6 +134,13 @@ const ogImageUrl = new URL(ogImage.src ?? ogImage, Astro.site ?? Astro.url).toSt
           const deleteSpeed = 50;
           const pause = 1200;
 
+          const updateColor = () => {
+            el.classList.toggle("rotating-word--optimizely", wordIndex % 2 === 0);
+            el.classList.toggle("rotating-word--ai", wordIndex % 2 !== 0);
+          };
+
+          updateColor();
+
           const tick = () => {
             const word = words[wordIndex];
             if (!deleting) {
@@ -150,6 +157,7 @@ const ogImageUrl = new URL(ogImage.src ?? ogImage, Astro.site ?? Astro.url).toSt
               if (charIndex === 0) {
                 deleting = false;
                 wordIndex = (wordIndex + 1) % words.length;
+                updateColor();
               }
             }
             setTimeout(tick, deleting ? deleteSpeed : typeSpeed);
