@@ -5,6 +5,14 @@ import GiscusComments from "../../components/GiscusComments.astro";
 import { getCollection } from "astro:content";
 import { getReadingTime } from "../../utils/readingTime";
 import { formatShortDate } from "../../utils/formatDate";
+import aboutAuthorPhoto from "../../assets/about/wojciech-1.png";
+
+const getFullYearsSince = (startDate: Date) => {
+  const now = new Date();
+  const yearDiff = now.getUTCFullYear() - startDate.getUTCFullYear();
+  const anniversary = new Date(Date.UTC(now.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate()));
+  return now >= anniversary ? yearDiff : Math.max(0, yearDiff - 1);
+};
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -16,6 +24,7 @@ const { title, description, pubDate, tags } = post.data;
 const { Content, headings } = await post.render();
 const { minutes } = getReadingTime(post.body ?? "");
 const toc = headings.filter((heading) => heading.depth > 1 && heading.depth <= 3);
+const yearsExperience = getFullYearsSince(new Date(Date.UTC(2018, 4, 1)));
 
 const relatedPosts = (await getCollection("blog"))
   .filter((entry) => !entry.data.draft && entry.slug !== post.slug)
@@ -65,7 +74,39 @@ const relatedPosts = (await getCollection("blog"))
     <hr />
     <Content />
   </article>
-  <GiscusComments />
+  <section class="mt-12">
+    <div class="section-divider" aria-hidden="true"></div>
+    <div class="card-surface author-card mt-6 p-6">
+      <div class="author-card-header">
+        <span class="author-card-line" aria-hidden="true"></span>
+        <h2 class="author-card-title">About the author</h2>
+        <span class="author-card-line" aria-hidden="true"></span>
+      </div>
+      <img
+        class="author-card-photo"
+        src={aboutAuthorPhoto.src}
+        alt="Wojciech Seweryn"
+        width="176"
+        height="176"
+        loading="lazy"
+        decoding="async"
+      />
+      <div class="author-card-body">
+        <h3 class="author-card-name">Wojciech Seweryn</h3>
+        <p class="author-card-role">Optimizely Expert &amp; AI-Focused Software Engineer</p>
+        <div class="author-card-divider" aria-hidden="true"></div>
+        <p>
+          Software engineer with {yearsExperience} years of commercial experience building enterprise
+          platforms and tailored digital solutions. Writes about Optimizely, AI, architecture,
+          personalization, experimentation, performance, and modern implementation practices.
+        </p>
+        <p class="author-card-contact">
+          Questions, feedback or ideas?{" "}
+          <a class="contact-link" href="mailto:wojtechseweryn@gmail.com">wojtechseweryn@gmail.com</a>
+        </p>
+      </div>
+    </div>
+  </section>
   {relatedPosts.length >= 2 && (
     <section class="mt-12">
       <div class="section-divider" aria-hidden="true"></div>
@@ -80,6 +121,7 @@ const relatedPosts = (await getCollection("blog"))
       </div>
     </section>
   )}
+  <GiscusComments />
 </BaseLayout>
 
 <script is:inline>
