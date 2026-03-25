@@ -60,6 +60,7 @@ const ogImageUrl = new URL(ogImage.src ?? ogImage, Astro.site ?? Astro.url).toSt
             const rect = card.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
+            const ratio = clamp(y / rect.height, 0, 1);
             const mx = (x / rect.width) * 100;
             const my = (y / rect.height) * 100;
             const rx = clamp(((y / rect.height) - 0.5) * -8, -6, 6);
@@ -67,6 +68,8 @@ const ogImageUrl = new URL(ogImage.src ?? ogImage, Astro.site ?? Astro.url).toSt
             const ox = clamp(((x / rect.width) - 0.5) * 10, -6, 6);
             const oy = clamp(((y / rect.height) - 0.5) * 10, -6, 6);
 
+            card.style.setProperty("--top-glow", `${(1 - ratio).toFixed(3)}`);
+            card.style.setProperty("--bottom-glow", `${ratio.toFixed(3)}`);
             card.style.setProperty("--mx", `${mx}%`);
             card.style.setProperty("--my", `${my}%`);
             card.style.setProperty("--rx", `${rx}deg`);
@@ -84,6 +87,8 @@ const ogImageUrl = new URL(ogImage.src ?? ogImage, Astro.site ?? Astro.url).toSt
           };
 
           const onLeave = () => {
+            card.style.setProperty("--top-glow", "0.55");
+            card.style.setProperty("--bottom-glow", "0.55");
             card.style.setProperty("--rx", "0deg");
             card.style.setProperty("--ry", "0deg");
             card.style.setProperty("--ox", "0px");

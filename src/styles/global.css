@@ -224,7 +224,18 @@ html.dark .search-icon {
 .prose pre {
   @apply rounded-lg border border-black/10 dark:border-white/10;
   position: relative;
-  padding-top: 2.4rem;
+  padding-top: 2rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.prose pre code {
+  display: block;
+  color: inherit;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  line-height: 1.45;
 }
 
 .prose ul li::marker,
@@ -232,8 +243,67 @@ html.dark .search-icon {
   color: rgba(15,20,28,0.75);
 }
 
+.prose ul,
+.prose ol {
+  margin: 1rem 0;
+  padding-left: 1.25rem;
+}
+
+.prose li {
+  margin: 0.25rem 0;
+}
+
+.prose li > ul,
+.prose li > ol {
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
 .prose hr {
   border-color: rgba(0,0,0,0.18);
+}
+
+.prose table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid rgba(15,20,28,0.14);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.68);
+}
+
+.prose thead th {
+  font-weight: 700;
+  color: #0b0d12;
+  background: rgba(15,20,28,0.04);
+  border-bottom: 1px solid rgba(15,20,28,0.16);
+}
+
+.prose th,
+.prose td {
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th + th,
+.prose td + td {
+  border-left: 1px solid rgba(15,20,28,0.12);
+}
+
+.prose tbody tr + tr td {
+  border-top: 1px solid rgba(15,20,28,0.12);
+}
+
+.prose tbody td:first-child {
+  font-weight: 600;
+  color: #0b0d12;
+}
+
+.prose tbody tr:nth-child(even) {
+  background: rgba(15,20,28,0.02);
 }
 
 .toc {
@@ -281,6 +351,34 @@ html.dark .search-icon {
 
 html.dark .prose hr {
   border-color: rgba(255,255,255,0.18);
+}
+
+html.dark .prose table {
+  border-color: rgba(255,255,255,0.18);
+  background: rgba(15,20,28,0.76);
+}
+
+html.dark .prose thead th {
+  color: #f4f7fb;
+  background: rgba(255,255,255,0.06);
+  border-bottom-color: rgba(255,255,255,0.18);
+}
+
+html.dark .prose th + th,
+html.dark .prose td + td {
+  border-left-color: rgba(255,255,255,0.14);
+}
+
+html.dark .prose tbody tr + tr td {
+  border-top-color: rgba(255,255,255,0.14);
+}
+
+html.dark .prose tbody td:first-child {
+  color: #f4f7fb;
+}
+
+html.dark .prose tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
 }
 
 html.dark .prose ul li::marker,
@@ -348,6 +446,136 @@ html.dark .about-photo {
   background: rgba(255,255,255,0.06);
 }
 
+.author-card {
+  display: grid;
+  grid-template-columns: 176px 1fr;
+  gap: 24px;
+  align-items: center;
+  padding: 28px !important;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.author-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(34,182,199,0.34);
+  box-shadow: 0 20px 44px rgba(34,182,199,0.16);
+}
+
+.author-card-header {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 18px;
+  align-items: center;
+}
+
+.author-card-line {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(15,20,28,0.08),
+    rgba(15,20,28,0.16),
+    rgba(15,20,28,0.08)
+  );
+}
+
+.author-card-title {
+  margin: 0;
+  text-align: center;
+  font-size: 1.45rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.author-card-photo {
+  width: 100%;
+  max-width: 176px;
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+  border: 1px solid rgba(0,0,0,0.12);
+  object-fit: cover;
+  background: rgba(0,0,0,0.04);
+}
+
+.author-card-body {
+  display: grid;
+  gap: 10px;
+}
+
+.author-card-name {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.author-card-role {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(15,20,28,0.62);
+}
+
+.author-card-divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(15,20,28,0.10),
+    rgba(15,20,28,0.18),
+    rgba(15,20,28,0.10)
+  );
+}
+
+.author-card-body p {
+  margin: 0;
+  color: rgba(15,20,28,0.82);
+  line-height: 1.65;
+  font-size: 1rem;
+}
+
+.author-card-contact {
+  margin: 0;
+  padding-top: 6px;
+  text-align: center;
+  color: rgba(15,20,28,0.82);
+  font-weight: 700;
+}
+
+html.dark .author-card-photo {
+  border-color: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+}
+
+html.dark .author-card-line,
+html.dark .author-card-divider {
+  background: linear-gradient(
+    to right,
+    rgba(255,255,255,0.06),
+    rgba(255,255,255,0.18),
+    rgba(255,255,255,0.06)
+  );
+}
+
+html.dark .author-card-role {
+  color: rgba(232,238,246,0.66);
+}
+
+html.dark .author-card-body p {
+  color: rgba(232,238,246,0.84);
+}
+
+html.dark .author-card:hover {
+  border-color: rgba(120,170,255,0.28);
+  box-shadow: 0 20px 44px rgba(8,12,18,0.62), 0 0 24px rgba(120,170,255,0.12);
+}
+
+html.dark .author-card-contact {
+  color: rgba(232,238,246,0.84);
+}
+
 @media (max-width: 640px) {
   .about-photo {
     aspect-ratio: 1 / 1;
@@ -361,6 +589,28 @@ html.dark .about-photo {
 
   .about-photo-column .about-photo:nth-child(n + 2) {
     display: none;
+  }
+
+  .author-card {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .author-card-header {
+    gap: 12px;
+  }
+
+  .author-card-title {
+    font-size: 1.28rem;
+  }
+
+  .author-card-photo {
+    max-width: 148px;
+  }
+
+  .author-card-actions {
+    justify-content: center;
   }
 }
 
@@ -874,6 +1124,7 @@ html.dark .empty-state {
   --label-bg: rgba(100, 116, 139, 0.12);
   --label-color: rgba(100, 116, 139, 0.6);
   background: var(--label-bg);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0);
 }
 
 .post-label-text {
@@ -891,8 +1142,7 @@ html.dark .empty-state {
 }
 
 .card-tilt:hover .post-label {
-  width: 42px;
-  min-width: 42px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.32);
 }
 
 .card-tilt:hover .post-label-text {
@@ -931,6 +1181,56 @@ html.dark .post-label--optimizely-ai {
 
 .card-tilt--optimizely-ai {
   --glow-color: 100, 130, 220;
+  --tilt-glow: 1.18;
+  --top-glow: 0.55;
+  --bottom-glow: 0.55;
+}
+
+.card-tilt--optimizely-ai::before {
+  background-image:
+    radial-gradient(420px circle at var(--mx, 50%) 16%,
+    rgb(212 175 55 / calc(var(--top-glow) * 0.96)),
+    rgb(212 175 55 / calc(var(--top-glow) * 0.40)) 42%,
+    transparent 72%),
+    linear-gradient(180deg,
+    rgb(212 175 55 / calc(var(--top-glow) * 0.26)),
+    rgb(212 175 55 / calc(var(--top-glow) * 0.06)) 42%,
+    transparent 60%),
+    radial-gradient(440px circle at var(--mx, 50%) 84%,
+    rgb(80 130 255 / calc(var(--bottom-glow) * 0.92)),
+    rgb(80 130 255 / calc(var(--bottom-glow) * 0.36)) 46%,
+    transparent 76%),
+    linear-gradient(0deg,
+    rgb(80 130 255 / calc(var(--bottom-glow) * 0.28)),
+    rgb(80 130 255 / calc(var(--bottom-glow) * 0.06)) 42%,
+    transparent 60%);
+  background-size: 100% 58%, 100% 58%, 100% 58%, 100% 58%;
+  background-position: top center, top center, bottom center, bottom center;
+  background-repeat: no-repeat;
+  filter: blur(30px);
+}
+
+.card-tilt--optimizely-ai .card-surface::after {
+  background-image:
+    radial-gradient(340px 220px at 12% 14%,
+    rgb(212 175 55 / calc(var(--top-glow) * 0.42)),
+    transparent 72%),
+    linear-gradient(180deg,
+    rgb(212 175 55 / calc(var(--top-glow) * 0.16)),
+    rgb(212 175 55 / calc(var(--top-glow) * 0.04)) 40%,
+    transparent 60%),
+    radial-gradient(380px 250px at 86% 84%,
+    rgb(80 130 255 / calc(var(--bottom-glow) * 0.42)),
+    transparent 72%),
+    linear-gradient(0deg,
+    rgb(80 130 255 / calc(var(--bottom-glow) * 0.18)),
+    rgb(80 130 255 / calc(var(--bottom-glow) * 0.04)) 40%,
+    transparent 60%);
+  background-size: 100% 58%, 100% 58%, 100% 58%, 100% 58%;
+  background-position: top center, top center, bottom center, bottom center;
+  background-repeat: no-repeat;
+  opacity: 0.92;
+  filter: blur(16px);
 }
 
 /* astro — purple brand */
@@ -1403,6 +1703,53 @@ html.dark .card-surface::after {
     radial-gradient(200px 140px at 92% 70%, rgba(62,214,229,0.12), transparent 72%);
   opacity: 0.4;
   filter: blur(10px);
+}
+
+html.dark .card-tilt--optimizely-ai::before {
+  background-image:
+    radial-gradient(420px circle at var(--mx, 50%) 16%,
+    rgb(212 175 55 / calc(var(--top-glow) * 0.74)),
+    rgb(212 175 55 / calc(var(--top-glow) * 0.30)) 42%,
+    transparent 72%),
+    linear-gradient(180deg,
+    rgb(212 175 55 / calc(var(--top-glow) * 0.22)),
+    rgb(212 175 55 / calc(var(--top-glow) * 0.06)) 42%,
+    transparent 60%),
+    radial-gradient(440px circle at var(--mx, 50%) 84%,
+    rgb(120 170 255 / calc(var(--bottom-glow) * 0.72)),
+    rgb(120 170 255 / calc(var(--bottom-glow) * 0.30)) 46%,
+    transparent 76%),
+    linear-gradient(0deg,
+    rgb(120 170 255 / calc(var(--bottom-glow) * 0.24)),
+    rgb(120 170 255 / calc(var(--bottom-glow) * 0.06)) 42%,
+    transparent 60%);
+  background-size: 100% 58%, 100% 58%, 100% 58%, 100% 58%;
+  background-position: top center, top center, bottom center, bottom center;
+  background-repeat: no-repeat;
+  filter: blur(30px);
+}
+
+html.dark .card-tilt--optimizely-ai .card-surface::after {
+  background-image:
+    radial-gradient(340px 220px at 12% 14%,
+    rgb(212 175 55 / calc(var(--top-glow) * 0.30)),
+    transparent 72%),
+    linear-gradient(180deg,
+    rgb(212 175 55 / calc(var(--top-glow) * 0.14)),
+    rgb(212 175 55 / calc(var(--top-glow) * 0.04)) 40%,
+    transparent 60%),
+    radial-gradient(380px 250px at 86% 84%,
+    rgb(120 170 255 / calc(var(--bottom-glow) * 0.34)),
+    transparent 72%),
+    linear-gradient(0deg,
+    rgb(120 170 255 / calc(var(--bottom-glow) * 0.14)),
+    rgb(120 170 255 / calc(var(--bottom-glow) * 0.04)) 40%,
+    transparent 60%);
+  background-size: 100% 58%, 100% 58%, 100% 58%, 100% 58%;
+  background-position: top center, top center, bottom center, bottom center;
+  background-repeat: no-repeat;
+  opacity: 0.82;
+  filter: blur(16px);
 }
 
 @keyframes card-drift {

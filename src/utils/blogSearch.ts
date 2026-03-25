@@ -135,7 +135,7 @@ export const initBlogSearch = (options: BlogSearchOptions = {}): BlogSearchContr
     const isOptimizelyAI = hasOptimizely && hasAI;
     const primaryTag = post.tags?.[0] ?? "";
     const tagSlug = isOptimizelyAI ? "optimizely-ai" : primaryTag.toLowerCase();
-    const labelText = isOptimizelyAI ? "Optimizely · AI" : primaryTag;
+    const labelText = isOptimizelyAI ? "Optimizely AI" : primaryTag;
 
     const article = doc.createElement("article");
     article.className = `card card-tilt card-tilt--${tagSlug}`;
@@ -161,6 +161,18 @@ export const initBlogSearch = (options: BlogSearchOptions = {}): BlogSearchContr
     const stack = doc.createElement("div");
     stack.className = "flex flex-col gap-3 flex-1 min-w-0 p-6";
 
+    const meta = doc.createElement("div");
+    meta.className = "text-xs text-ink-900/70 dark:text-ink-200/70";
+    const time = doc.createElement("time");
+    time.dateTime = post.pubDate;
+    time.textContent = formatShortDate(new Date(post.pubDate));
+    const dot = doc.createElement("span");
+    dot.textContent = " \u00b7 ";
+    dot.setAttribute("aria-hidden", "true");
+    const reading = doc.createElement("span");
+    reading.textContent = `${post.readingTime ?? 1} min read`;
+    meta.append(time, dot, reading);
+
     const link = doc.createElement("a");
     link.href = post.url;
     link.className = "block";
@@ -175,18 +187,6 @@ export const initBlogSearch = (options: BlogSearchOptions = {}): BlogSearchContr
 
     link.append(title, desc);
 
-    const meta = doc.createElement("div");
-    meta.className = "text-xs text-ink-900/70 dark:text-ink-200/70";
-    const time = doc.createElement("time");
-    time.dateTime = post.pubDate;
-    time.textContent = formatShortDate(new Date(post.pubDate));
-    const dot = doc.createElement("span");
-    dot.textContent = " \u00b7 ";
-    dot.setAttribute("aria-hidden", "true");
-    const reading = doc.createElement("span");
-    reading.textContent = `${post.readingTime ?? 1} min read`;
-    meta.append(time, dot, reading);
-
     const tags = doc.createElement("div");
     tags.className = "mt-1 flex flex-wrap gap-2";
     (post.tags || []).forEach((tag) => {
@@ -199,7 +199,7 @@ export const initBlogSearch = (options: BlogSearchOptions = {}): BlogSearchContr
       tags.append(tagLink);
     });
 
-    stack.append(link, meta, tags);
+    stack.append(meta, link, tags);
     surface.append(stack);
     article.append(surface);
 
