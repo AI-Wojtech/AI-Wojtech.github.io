@@ -1,19 +1,19 @@
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
+import { enrichPostsForRss } from "../utils/rss";
 
 export async function GET(context) {
-  const posts = (await getCollection("blog"))
-    .filter((p) => !p.data.draft)
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  const posts = (await getCollection("blog")).filter((p) => !p.data.draft);
+  const rssPosts = await enrichPostsForRss(posts);
 
   return rss({
     title: "Wojciech Seweryn",
     description: "A minimalist technical blog about Optimizely, AI, and software engineering.",
     site: context.site,
-    items: posts.map((post) => ({
+    items: rssPosts.map(({ post, rssDate }) => ({
       title: post.data.title,
       description: post.data.description,
-      pubDate: post.data.pubDate,
+      pubDate: rssDate,
       link: `/blog/${post.slug}`,
       categories: post.data.tags
     }))
