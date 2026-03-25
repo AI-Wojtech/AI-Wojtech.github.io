@@ -224,6 +224,12 @@ html.dark .search-icon {
 .prose pre {
   @apply rounded-lg border border-black/10 dark:border-white/10;
   position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  white-space: pre !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
   padding-top: 2rem;
   font-size: 0.9rem;
   line-height: 1.45;
@@ -236,6 +242,9 @@ html.dark .search-icon {
   border-radius: 0;
   padding: 0;
   line-height: 1.45;
+  white-space: inherit;
+  width: max-content;
+  min-width: 100%;
 }
 
 .prose ul li::marker,
@@ -421,6 +430,21 @@ html.dark .toc-link {
   );
 }
 
+.article-shell {
+  padding: 24px 28px;
+  border: 1px solid rgba(15,20,28,0.10);
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.82), rgba(255,255,255,0.74)),
+    radial-gradient(420px 220px at 100% 0%, rgba(34,182,199,0.08), transparent 70%);
+  box-shadow: 0 18px 50px rgba(15,20,28,0.06);
+  backdrop-filter: blur(8px);
+}
+
+.article-shell > .prose > :first-child {
+  margin-top: 0;
+}
+
 .about-photo {
   width: 100%;
   height: auto;
@@ -444,6 +468,14 @@ html.dark .toc-link {
 html.dark .about-photo {
   border-color: rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.06);
+}
+
+html.dark .article-shell {
+  border-color: rgba(255,255,255,0.10);
+  background:
+    linear-gradient(180deg, rgba(15,20,28,0.82), rgba(15,20,28,0.76)),
+    radial-gradient(420px 220px at 100% 0%, rgba(62,214,229,0.10), transparent 70%);
+  box-shadow: 0 24px 56px rgba(0,0,0,0.28);
 }
 
 .author-card {
@@ -577,6 +609,11 @@ html.dark .author-card-contact {
 }
 
 @media (max-width: 640px) {
+  .article-shell {
+    padding: 18px 18px 20px;
+    border-radius: 22px;
+  }
+
   .about-photo {
     aspect-ratio: 1 / 1;
     max-width: 100%;
@@ -720,7 +757,7 @@ html:not(.dark) .reading-progress.is-scrolling {
 }
 
 .back-to-top-icon {
-  font-size: 16px;
+  font-size: 22px;
   line-height: 1;
   transform: translateY(-1px);
 }
@@ -753,6 +790,10 @@ html.dark .back-to-top:focus-visible {
     bottom: 18px;
     width: 36px;
     height: 36px;
+  }
+
+  .back-to-top-icon {
+    font-size: 18px;
   }
 }
 
