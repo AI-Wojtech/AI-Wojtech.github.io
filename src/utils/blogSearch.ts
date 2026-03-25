@@ -135,7 +135,7 @@ export const initBlogSearch = (options: BlogSearchOptions = {}): BlogSearchContr
     const isOptimizelyAI = hasOptimizely && hasAI;
     const primaryTag = post.tags?.[0] ?? "";
     const tagSlug = isOptimizelyAI ? "optimizely-ai" : primaryTag.toLowerCase();
-    const labelText = isOptimizelyAI ? "Optimizely AI" : primaryTag;
+    const labelText = isOptimizelyAI ? "OPTIMIZELY • AI" : primaryTag;
 
     const article = doc.createElement("article");
     article.className = `card card-tilt card-tilt--${tagSlug}`;

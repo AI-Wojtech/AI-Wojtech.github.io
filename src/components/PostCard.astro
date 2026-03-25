@@ -14,7 +14,7 @@ const hasAI = tagSlugs.includes("ai");
 const isOptimizelyAI = hasOptimizely && hasAI;
 
 const tagSlug = isOptimizelyAI ? "optimizely-ai" : primaryTag.toLowerCase();
-const labelText = isOptimizelyAI ? "Optimizely AI" : primaryTag;
+const labelText = isOptimizelyAI ? "OPTIMIZELY • AI" : primaryTag;
 ---
 <article
   class={`card card-tilt card-tilt--${tagSlug} ${className}`.trim()}
