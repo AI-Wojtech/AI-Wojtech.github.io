@@ -45,6 +45,7 @@ const relatedPosts = (await getCollection("blog"))
   <button class="back-to-top" type="button" data-back-to-top aria-label="Back to top">
     <span class="back-to-top-icon" aria-hidden="true">↑</span>
   </button>
+  <div class="article-shell">
   <article class="prose lg:prose-lg">
     <h1>{title}</h1>
     <p class="text-sm text-ink-900/70 dark:text-ink-200/70">
@@ -74,6 +75,7 @@ const relatedPosts = (await getCollection("blog"))
     <hr />
     <Content />
   </article>
+  </div>
   <section class="mt-12">
     <div class="section-divider" aria-hidden="true"></div>
     <div class="card-surface author-card mt-6 p-6">
