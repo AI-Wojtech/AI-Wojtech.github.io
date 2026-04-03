@@ -6,6 +6,9 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 export default defineConfig({
   site: "https://wseweryn.dev",
+  image: {
+    layout: "constrained"
+  },
   integrations: [
     tailwind({ applyBaseStyles: false }),
     sitemap()

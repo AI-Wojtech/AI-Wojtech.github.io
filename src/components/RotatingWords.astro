@@ -1,0 +1,20 @@
+---
+interface Props {
+  words: string[];
+  class?: string;
+  initialWord?: string;
+}
+
+const { words, class: className = "", initialWord = words[0] ?? "" } = Astro.props as Props;
+const rotatingWords = words.join("|");
+---
+<span class={className}>
+  <span class="rotating-word" data-rotating-words={rotatingWords}>{initialWord}</span>
+  <span class="rotating-caret" aria-hidden="true">|</span>
+</span>
+
+<script>
+  import { initRotatingWords } from "../utils/rotatingWords";
+
+  initRotatingWords();
+</script>

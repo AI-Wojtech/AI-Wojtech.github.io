@@ -1,97 +1,213 @@
-﻿---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import PostCard from "../components/PostCard.astro";
-import { getCollection } from "astro:content";
-
-const pageSize = 5;
-const allPosts = (await getCollection("blog"))
-  .filter((p) => !p.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const pagePosts = allPosts.slice(0, pageSize);
-const pageCount = Math.max(1, Math.ceil(allPosts.length / pageSize));
-const currentPage = 1;
-const pageUrl = (page) => (page === 1 ? "/" : `/blog/page/${page}`);
-const placeholderTitle = "New posts coming soon";
-const placeholderBody = "I am currently preparing further articles – stay tuned.";
-const showPlaceholder = allPosts.length > 0 && allPosts.length < 4;
 ---
-<BaseLayout title="Home" description="A minimalist, ultra-fast technical blog.">
-  <section class="mb-12">
-    <div class="page-header">
-      <h1 class="page-title">Latest Articles</h1>
-      <label class="search-bar">
-        <span class="sr-only">Search</span>
-        <span class="search-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="7"></circle>
-            <path d="M20 20l-3.5-3.5"></path>
-          </svg>
-        </span>
-        <input
-          class="search-input"
-          type="search"
-          placeholder="Search"
-          aria-label="Search posts"
-          data-search-input
-        />
-      </label>
+import { Image } from "astro:assets";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { BookOpenText, Github, Linkedin, Mail, Rss, UserRound } from "lucide-astro";
+import siteLogo from "../assets/branding/ws-blog-logo.png";
+import ThemeToggle from "../components/ThemeToggle.astro";
+import RotatingWords from "../components/RotatingWords.astro";
+
+const emailAddress = "wojseweryn@gmail.com";
+
+const actionCards = [
+  {
+    href: "/about",
+    icon: UserRound,
+    title: "About Me",
+    body: "Background, experience, and the kind of platform challenges I help solve.",
+  },
+  {
+    href: "/contact",
+    icon: Mail,
+    title: "Contact",
+    body: "Reach out if you want to improve an existing platform or build something new.",
+  },
+  {
+    href: "/blog",
+    icon: BookOpenText,
+    title: "My Blog",
+    body: "Hands-on articles about Optimizely, platform architecture, AI, and modern engineering.",
+  },
+];
+
+const socialLinks = [
+  { href: "https://www.linkedin.com/in/wojciechseweryn/", label: "LinkedIn", icon: Linkedin },
+  { href: "https://github.com/AI-Wojtech", label: "GitHub", icon: Github },
+  { copyEmail: true, label: "Copy email", icon: Mail },
+  { href: "/rss.xml", label: "RSS", icon: Rss },
+];
+---
+<BaseLayout
+  title="Home"
+  description="Optimizely expert and AI-focused software engineer writing about implementation, architecture, and practical engineering work."
+  mainClass="home-layout"
+  showHeader={false}
+>
+  <section class="home-landing-shell">
+    <div class="home-landing-panel">
+      <div class="home-landing-topbar">
+        <a href="/" class="home-brand">
+          <Image
+            class="home-brand-logo"
+            src={siteLogo}
+            alt="WS Blog logo"
+            widths={[120, 160, 200]}
+            sizes="(max-width: 640px) 120px, 160px"
+            format="webp"
+            quality={90}
+            loading="eager"
+            decoding="async"
+          />
+        </a>
+
+        <div class="home-landing-nav-group">
+          <nav class="home-landing-nav" aria-label="Homepage">
+            <a class="home-top-link" href="/about">About Me</a>
+            <a class="home-top-link" href="/contact">Contact</a>
+            <a class="home-top-link" href="/blog">Blog</a>
+          </nav>
+
+          <div class="home-top-icons">
+            <ThemeToggle />
+            <a class="home-top-icon-link" href="https://github.com/AI-Wojtech" aria-label="GitHub">
+              <Github size={18} />
+            </a>
+            <button
+              type="button"
+              class="home-top-icon-link home-copy-trigger"
+              data-copy-email={emailAddress}
+              data-copy-default-label="Copy email"
+              data-copy-copied-label="Email copied"
+              aria-label="Copy email"
+              title="Copy email"
+            >
+              <Mail size={18} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="home-landing-divider" aria-hidden="true"></div>
+
+      <div class="home-landing-content">
+        <div class="home-landing-main">
+          <div class="home-copy-stack">
+            <p class="home-eyebrow">Optimizely Expert • Software Engineer • AI-Focused Builder</p>
+            <h1 class="home-title">Hello👋 I&apos;m Wojciech Seweryn</h1>
+            <div class="home-landing-summary">
+              <p class="home-summary-line home-summary-line--primary">
+                Turning data into decisions with expertise in
+                <RotatingWords
+                  class="home-inline-rotator"
+                  words={[
+                    "Optimizely",
+                    "MCP Servers",
+                    "AI Agents",
+                    "Personalization",
+                    "Experimentation",
+                    "Recommendations",
+                    "Prompt Engineering",
+                    "Feature Flags",
+                    "Product Analytics",
+                    "Clean Architecture",
+                  ]}
+                />
+              </p>
+              <p class="home-summary-line home-summary-line--secondary">
+                Engineering better digital platforms with Optimizely, AI, and experimentation.
+                <br />
+                Practical architecture, thoughtful implementation, and measurable outcomes.
+              </p>
+            </div>
+          </div>
+
+          <div class="home-action-grid" aria-label="Homepage navigation">
+            {actionCards.map(({ href, icon: Icon, title, body }) => (
+              <a class="home-action-card" href={href}>
+                <span class="home-action-icon" aria-hidden="true">
+                  <Icon size={30} stroke-width={1.65} />
+                </span>
+                <span class="home-action-title">{title}</span>
+                <span class="home-action-body">{body}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div class="home-landing-bottom">
+          <p class="home-landing-note">
+            Have a platform to improve, an idea to validate, or a technical direction to clarify? Let&apos;s talk.
+          </p>
+
+          <div class="home-social-row" aria-label="Social links">
+            {socialLinks.map(({ href, label, icon: Icon, copyEmail }) =>
+              copyEmail ? (
+                <button
+                  type="button"
+                  class="home-social-link home-copy-trigger"
+                  data-copy-email={emailAddress}
+                  data-copy-default-label={label}
+                  data-copy-copied-label="Email copied"
+                  aria-label={label}
+                  title={label}
+                >
+                  <Icon size={18} />
+                </button>
+              ) : (
+                <a class="home-social-link" href={href} aria-label={label}>
+                  <Icon size={18} />
+                </a>
+              )
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+  <script is:inline>
+    (() => {
+      const buttons = Array.from(document.querySelectorAll("[data-copy-email]"));
+      if (buttons.length === 0) return;
 
-  <section class="grid gap-6" data-post-list>
-    {pagePosts.length > 0 ? (
-      <>
-        {pagePosts.map((post) => (
-          <div data-search-item data-title={post.data.title} data-description={post.data.description}>
-            <PostCard post={post} />
-          </div>
-        ))}
-        {showPlaceholder && (
-          <div class="card-surface p-6 empty-state">
-            <h2 class="text-lg font-semibold">{placeholderTitle}</h2>
-            <p class="mt-2 text-sm text-ink-900/70 dark:text-ink-200/70">
-              {placeholderBody}
-            </p>
-          </div>
-        )}
-      </>
-    ) : (
-      <div class="card-surface p-6 empty-state">
-        <h2 class="text-lg font-semibold">{placeholderTitle}</h2>
-        <p class="mt-2 text-sm text-ink-900/70 dark:text-ink-200/70">
-          {placeholderBody}
-        </p>
-      </div>
-    )}
-  </section>
-  <section class="grid gap-6 hidden" data-search-results></section>
-  <div class="card-surface p-6 hidden empty-state" data-search-empty>
-    <h2 class="text-lg font-semibold">No posts match your search</h2>
-    <p class="mt-2 text-sm text-ink-900/70 dark:text-ink-200/70">
-      Try a different keyword or clear the search field.
-    </p>
-  </div>
-  {pageCount > 1 && (
-    <nav class="mt-10 flex items-center justify-between text-sm" data-pagination>
-      <div>
-        {currentPage > 1 && (
-          <a class="tag-chip" href={pageUrl(currentPage - 1)}>Newer</a>
-        )}
-      </div>
-      <div class="text-xs text-ink-900/70 dark:text-ink-200/70">
-        Page {currentPage} of {pageCount}
-      </div>
-      <div>
-        {currentPage < pageCount && (
-          <a class="tag-chip" href={pageUrl(currentPage + 1)}>Older</a>
-        )}
-      </div>
-    </nav>
-  )}
-  <script>
-    import { initBlogSearch } from "../utils/blogSearch";
+      const copyText = async (value) => {
+        try {
+          await navigator.clipboard.writeText(value);
+        } catch {
+          const area = document.createElement("textarea");
+          area.value = value;
+          area.style.position = "fixed";
+          area.style.opacity = "0";
+          document.body.appendChild(area);
+          area.focus();
+          area.select();
+          document.execCommand("copy");
+          area.remove();
+        }
+      };
 
-    initBlogSearch();
+      buttons.forEach((button) => {
+        if (!(button instanceof HTMLButtonElement)) return;
+
+        let resetTimer = 0;
+        const defaultLabel = button.dataset.copyDefaultLabel ?? "Copy email";
+        const copiedLabel = button.dataset.copyCopiedLabel ?? "Email copied";
+
+        button.addEventListener("click", async () => {
+          const value = button.dataset.copyEmail ?? "";
+          if (!value) return;
+
+          await copyText(value);
+          button.classList.add("is-copied");
+          button.setAttribute("aria-label", copiedLabel);
+          button.setAttribute("title", copiedLabel);
+
+          window.clearTimeout(resetTimer);
+          resetTimer = window.setTimeout(() => {
+            button.classList.remove("is-copied");
+            button.setAttribute("aria-label", defaultLabel);
+            button.setAttribute("title", defaultLabel);
+          }, 1400);
+        });
+      });
+    })();
   </script>
 </BaseLayout>
-

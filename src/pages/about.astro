@@ -1,17 +1,12 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { BrainCircuit, Sparkles, ChevronLeft, ChevronRight } from "lucide-astro";
 import aboutPhotoOne from "../assets/about/wojciech-1.png";
 import aboutPhotoTwo from "../assets/about/wojciech-2.png";
-import aboutPhotoThree from "../assets/about/wojciech-3.png";
+import { getYearsExperience } from "../utils/experience";
 
-const getFullYearsSince = (startDate) => {
-  const now = new Date();
-  const yearDiff = now.getUTCFullYear() - startDate.getUTCFullYear();
-  const anniversary = new Date(Date.UTC(now.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate()));
-  return now >= anniversary ? yearDiff : Math.max(0, yearDiff - 1);
-};
-
-const yearsExperience = getFullYearsSince(new Date(Date.UTC(2018, 4, 1)));
+const yearsExperience = getYearsExperience();
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const certModules = import.meta.glob("../assets/certifications/*.{png,jpg,jpeg,svg,webp}", { eager: true });
@@ -26,163 +21,232 @@ const certifications = Object.entries(certModules)
     const label = month && month >= 1 && month <= 12 ? `${monthNames[month - 1]} ${year}` : base;
     const sortKey = match ? parseInt(year, 10) * 100 + month : 0;
     const resolved = mod?.default ?? mod;
-    const src = resolved?.src ?? resolved;
     return {
-      src,
+      image: resolved,
       label,
       alt: `Certification ${label}`,
       sortKey
     };
   })
   .sort((a, b) => b.sortKey - a.sortKey);
-
-const certificationSlides = certifications.length > 0 ? [...certifications, ...certifications] : [];
 ---
-<BaseLayout title="About Me">
-  <section class="grid gap-8 lg:grid-cols-[240px_1fr]">
-    <div class="card-surface about-photo-column p-4">
-      <img
-        class="about-photo"
-        src={aboutPhotoOne.src}
-        alt="Wojciech Seweryn"
-        width="208"
-        height="260"
-        loading="lazy"
-        decoding="async"
-      />
-      <img
-        class="about-photo"
-        src={aboutPhotoTwo.src}
-        alt="Traveling the world"
-        width="208"
-        height="260"
-        loading="lazy"
-        decoding="async"
-      />
-      <img
-        class="about-photo"
-        src={aboutPhotoThree.src}
-        alt="Tatra Mountains"
-        width="208"
-        height="260"
-        loading="lazy"
-        decoding="async"
-      />
-    </div>
-    <div class="space-y-8">
-      <article class="prose lg:prose-lg">
-        <h1 class="page-title">About Me</h1>
-        <p>
-          I've been building software professionally for {yearsExperience} years, with a strong focus on .NET and
-          Optimizely (Episerver).
-        </p>
-        <p>
-          Over the years, I've delivered everything from large enterprise platforms to smaller, tailored
-          implementations. I enjoy working closely with clients - not only to meet requirements, but also to
-          uncover opportunities and implement improvements that make websites and digital products perform better.
-        </p>
-        <p>
-          My experience helps turn business goals into solid engineering decisions, so the solutions we build are
-          practical, measurable, and built to last.
-        </p>
-      </article>
+<BaseLayout title="About Me" mainClass="about-page-layout">
+  <section class="about-page-grid">
+    <article class="prose about-copy lg:prose-lg">
+      <h1 class="page-title">About Me</h1>
+      <p>
+        I've been building software professionally for {yearsExperience} years, with a strong focus on .NET and
+        Optimizely (Episerver).
+      </p>
+      <p>
+        Over the years, I've delivered everything from large enterprise platforms to smaller, tailored
+        implementations. I enjoy working closely with clients - not only to meet requirements, but also to
+        uncover opportunities and implement improvements that make websites and digital products perform better.
+      </p>
+      <p>
+        My experience helps turn business goals into solid engineering decisions, so the solutions we build are
+        practical, measurable, and built to last.
+      </p>
+    </article>
 
-      <div class="grid gap-4 sm:grid-cols-2">
-        <div class="card-surface about-card p-5">
-          <p class="card-title mb-6 text-ink-900/70 dark:text-ink-200/70">Technical Snapshot</p>
-          <ul class="list-check space-y-2 text-sm text-ink-900/80 dark:text-ink-200/80">
-            <li>.NET development with Optimizely (Episerver)</li>
-            <li>Commerce Cloud + Content Cloud certified</li>
-            <li>Personalization, experimentation, measurement</li>
-            <li>Architecture, performance, and reliability</li>
-          </ul>
+    <div class="about-feature-grid">
+      <section class="card-surface about-card about-feature-card">
+        <div class="about-feature-heading">
+          <span class="about-feature-icon" aria-hidden="true">
+            <BrainCircuit size={22} />
+          </span>
+          <h2 class="about-feature-title">Expertise</h2>
         </div>
-        <div class="card-surface about-card p-5">
-          <p class="card-title mb-6 text-ink-900/70 dark:text-ink-200/70">Outside Work</p>
-          <ul class="list-check space-y-2 text-sm text-ink-900/80 dark:text-ink-200/80">
-            <li>Based in Poland</li>
-            <li>Happily married and a proud dad</li>
-            <li>Dungeons &amp; Dragons DM for 20+ years</li>
-            <li>Exploring generative AI and blockchain</li>
-          </ul>
+        <ul class="about-feature-list">
+          <li>.NET development with Optimizely (Episerver)</li>
+          <li>Commerce Cloud + Content Cloud certified</li>
+          <li>Personalization, experimentation, measurement</li>
+          <li>Architecture, performance, and reliability</li>
+        </ul>
+      </section>
+      <section class="card-surface about-card about-feature-card">
+        <div class="about-feature-heading">
+          <span class="about-feature-icon" aria-hidden="true">
+            <Sparkles size={22} />
+          </span>
+          <h2 class="about-feature-title">Beyond Work</h2>
         </div>
-        <div class="card-surface card-muted about-card p-5 sm:col-span-2">
-          <p class="text-sm text-ink-900/70 dark:text-ink-200/70">
-            <span class="font-semibold">Fun fact:</span> my path into software was not a typical one. I hold an
-            M.Sc.Eng. degree in Bridge and Underground Structures, and before switching to tech, I spent several
-            years designing bridges in Poland.
-          </p>
-        </div>
-      </div>
+        <ul class="about-feature-list">
+          <li>Based in Poland</li>
+          <li>Happily married and a proud dad</li>
+          <li>Dungeons &amp; Dragons DM for 20+ years</li>
+          <li>Exploring generative AI and blockchain</li>
+        </ul>
+      </section>
     </div>
+
+    <section class="card-surface about-fun-fact about-fun-fact-band">
+      <p class="about-fun-fact-kicker">Fun fact</p>
+      <p class="about-fun-fact-copy">
+        my path into software was not a typical one. I hold an M.Sc.Eng. degree in Bridge and Underground
+        Structures, and before switching to tech, I spent several years designing bridges in Poland.
+      </p>
+    </section>
+
+    <aside class="about-sidebar">
+      <div class="card-surface about-photo-column about-photo-panel">
+        <Image
+          class="about-photo"
+          src={aboutPhotoOne}
+          alt="Wojciech Seweryn"
+          widths={[280, 420, 560]}
+          sizes="(max-width: 640px) calc(100vw - 3rem), (max-width: 1023px) min(420px, calc(100vw - 3rem)), 280px"
+          format="webp"
+          quality={78}
+          loading="eager"
+          decoding="async"
+        />
+        <Image
+          class="about-photo"
+          src={aboutPhotoTwo}
+          alt="Traveling the world"
+          widths={[280, 420, 560]}
+          sizes="(max-width: 640px) calc(100vw - 3rem), (max-width: 1023px) min(420px, calc(100vw - 3rem)), 280px"
+          format="webp"
+          quality={76}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </aside>
+
     {certifications.length > 0 && (
-      <div class="card-surface about-card p-4 lg:col-span-2">
-        <div class="cert-carousel" data-cert-carousel>
-          <div class="cert-track" data-cert-track>
-            {certifications.map((cert) => (
-              <div class="cert-item">
-                <div class="cert-image-frame">
-                  <img
-                    class="cert-image"
-                    src={cert.src}
-                    alt={cert.alt}
-                    loading="lazy"
-                    decoding="async"
-                    draggable="false"
-                  />
+      <section class="card-surface about-card cert-section">
+        <div class="cert-carousel-shell">
+          <button
+            class="cert-control cert-control-prev"
+            type="button"
+            data-cert-prev
+            aria-label="Show previous certification"
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <div class="cert-carousel" data-cert-carousel>
+            <div class="cert-track">
+                {certifications.map((cert) => (
+                  <div class="cert-item">
+                    <div class="cert-image-frame">
+                      <Image
+                        class="cert-image"
+                        src={cert.image}
+                        alt={cert.alt}
+                        widths={[180, 240, 300, 360]}
+                        sizes="(max-width: 540px) calc(100vw - 5rem), (max-width: 900px) calc((100vw - 6rem) / 2), calc((100vw - 12rem) / 4)"
+                        format="webp"
+                        quality={82}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div class="cert-caption">{cert.label}</div>
                 </div>
-                <div class="cert-caption">{cert.label}</div>
-              </div>
+              ))}
+            </div>
+          </div>
+          <button
+            class="cert-control cert-control-next"
+            type="button"
+            data-cert-next
+            aria-label="Show next certification"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+        {certifications.length > 1 && (
+          <div class="cert-dots">
+            {certifications.map((cert, certIndex) => (
+              <button
+                class:list={["cert-dot", certIndex === 0 && "is-active"]}
+                type="button"
+                data-cert-dot={certIndex}
+                aria-label={`Go to certification ${certIndex + 1}: ${cert.label}`}
+                aria-current={certIndex === 0 ? "true" : "false"}
+              ></button>
             ))}
           </div>
-        </div>
-      </div>
+        )}
+      </section>
     )}
   </section>
   <script is:inline>
-    const carousel = document.querySelector("[data-cert-carousel]");
-    if (carousel instanceof HTMLElement) {
+    (() => {
+      const carousel = document.querySelector("[data-cert-carousel]");
+      if (!(carousel instanceof HTMLElement)) return;
+
+      const prevButton = document.querySelector("[data-cert-prev]");
+      const nextButton = document.querySelector("[data-cert-next]");
+      const dotButtons = Array.from(document.querySelectorAll("[data-cert-dot]"));
+      const items = Array.from(carousel.querySelectorAll(".cert-item"));
       const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (items.length === 0) return;
+
       const getStep = () => {
-        const first = carousel.querySelector(".cert-item");
+        const first = items[0];
         if (!(first instanceof HTMLElement)) return 0;
         const style = window.getComputedStyle(carousel);
         const gap = parseFloat(style.getPropertyValue("--gap")) || 0;
         return first.getBoundingClientRect().width + gap;
       };
 
+      const normalizeIndex = (value) => {
+        const total = items.length;
+        if (total <= 1) return 0;
+        if (value < 0) return total - 1;
+        if (value >= total) return 0;
+        return value;
+      };
+
       let step = 0;
       let index = 0;
       let timer = 0;
-
-      const tick = () => {
-        step = getStep();
-        if (!step) return;
-        const maxIndex = Math.max(0, carousel.querySelectorAll(".cert-item").length - 1);
-        index = index >= maxIndex ? 0 : index + 1;
-        carousel.scrollTo({ left: step * index, behavior: "smooth" });
-        timer = window.setTimeout(tick, 5200);
-      };
-
-      const scheduleAuto = (delay) => {
-        if (prefersReduced) return;
-        window.clearTimeout(timer);
-        timer = window.setTimeout(tick, delay);
-      };
-
-      const onResize = () => {
-        step = getStep();
-        carousel.scrollTo({ left: step * index, behavior: "auto" });
-      };
-
-      if (!prefersReduced) {
-        window.addEventListener("resize", onResize);
-        scheduleAuto(3600);
-      }
-
       let dragging = false;
       let startX = 0;
       let startScroll = 0;
+
+      const updateDots = () => {
+        dotButtons.forEach((button, buttonIndex) => {
+          const active = buttonIndex === index;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-current", active ? "true" : "false");
+        });
+      };
+
+      const toggleControls = () => {
+        const isDisabled = items.length <= 1;
+        if (prevButton instanceof HTMLButtonElement) prevButton.disabled = isDisabled;
+        if (nextButton instanceof HTMLButtonElement) nextButton.disabled = isDisabled;
+      };
+
+      const goTo = (nextIndex, behavior = "smooth") => {
+        step = getStep();
+        if (!step) return;
+        index = normalizeIndex(nextIndex);
+        carousel.scrollTo({ left: step * index, behavior });
+        updateDots();
+      };
+
+      const scheduleAuto = (delay = 3600) => {
+        if (prefersReduced || items.length <= 1) return;
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          goTo(index + 1);
+          scheduleAuto(5200);
+        }, delay);
+      };
+
+      const onResize = () => {
+        goTo(index, "auto");
+      };
+
+      const stopAuto = () => {
+        window.clearTimeout(timer);
+      };
 
       const onPointerDown = (event) => {
         if (event.button !== undefined && event.button !== 0) return;
@@ -191,7 +255,7 @@ const certificationSlides = certifications.length > 0 ? [...certifications, ...c
         startX = event.clientX;
         startScroll = carousel.scrollLeft;
         carousel.style.scrollBehavior = "auto";
-        window.clearTimeout(timer);
+        stopAuto();
         carousel.setPointerCapture(event.pointerId);
       };
 
@@ -208,20 +272,51 @@ const certificationSlides = certifications.length > 0 ? [...certifications, ...c
         carousel.style.scrollBehavior = "smooth";
         step = getStep();
         if (step) {
-          index = Math.round(carousel.scrollLeft / step);
+          index = normalizeIndex(Math.round(carousel.scrollLeft / step));
+          goTo(index);
         }
-        scheduleAuto(3600);
+        scheduleAuto();
         if (event.pointerId !== undefined) {
           carousel.releasePointerCapture(event.pointerId);
         }
       };
+
+      if (!prefersReduced) {
+        window.addEventListener("resize", onResize);
+        scheduleAuto();
+      }
+
+      if (prevButton instanceof HTMLButtonElement) {
+        prevButton.addEventListener("click", () => {
+          goTo(index - 1);
+          scheduleAuto();
+        });
+      }
+
+      if (nextButton instanceof HTMLButtonElement) {
+        nextButton.addEventListener("click", () => {
+          goTo(index + 1);
+          scheduleAuto();
+        });
+      }
+
+      dotButtons.forEach((button, buttonIndex) => {
+        button.addEventListener("click", () => {
+          goTo(buttonIndex);
+          scheduleAuto();
+        });
+      });
+
+      toggleControls();
+      updateDots();
+      goTo(0, "auto");
 
       carousel.addEventListener("pointerdown", onPointerDown);
       carousel.addEventListener("pointermove", onPointerMove);
       carousel.addEventListener("pointerup", endDrag);
       carousel.addEventListener("pointercancel", endDrag);
       carousel.addEventListener("dragstart", (event) => event.preventDefault());
-    }
+    })();
   </script>
 </BaseLayout>
 
