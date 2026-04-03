@@ -1159,6 +1159,8 @@ html.dark .home-article-read:focus-visible {
 @media (max-width: 640px) {
   .home-layout {
     padding-top: 1.25rem;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
   }
 
   .home-landing-panel {
@@ -1195,6 +1197,7 @@ html.dark .home-article-read:focus-visible {
   .home-summary-line--primary {
     white-space: normal;
     font-size: 1.02rem;
+    min-height: 3.3rem;
     margin-top: 0.35rem;
     margin-bottom: 0.9rem;
   }
