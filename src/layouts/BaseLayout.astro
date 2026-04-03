@@ -43,7 +43,7 @@ const ogImageUrl = new URL(ogImage.src ?? ogImage, Astro.site ?? Astro.url).toSt
     <div class="bg-wownoise"></div>
     <div class="bg-grid"></div>
     {showHeader && <Header />}
-    <main class:list={["mx-auto max-w-4xl px-4 py-10", mainClass]}>
+    <main class:list={["mx-auto max-w-4xl px-3 sm:px-4 py-10", mainClass]}>
       <slot />
     </main>
     {showFooter && <Footer />}
