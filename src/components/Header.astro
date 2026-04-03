@@ -1,15 +1,35 @@
 ---
-import { Github, Rss, Linkedin, Sun, Moon } from "lucide-astro";
+import { Image } from "astro:assets";
+import { Github, Rss, Linkedin } from "lucide-astro";
+import siteLogo from "../assets/branding/ws-blog-logo.png";
+import ThemeToggle from "./ThemeToggle.astro";
+import RotatingWords from "./RotatingWords.astro";
+const pathname = Astro.url.pathname;
+const isActivePath = (href) => {
+  if (href === "/blog") {
+    return pathname === "/blog" || pathname.startsWith("/blog/") || pathname.startsWith("/tag/");
+  }
+
+  return pathname === href;
+};
+
+const navItems = [
+  { href: "/about", label: "About Me" },
+  { href: "/contact", label: "Contact" },
+  { href: "/blog", label: "Blog" },
+];
 ---
 <header class="mx-auto max-w-4xl px-4 pt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
   <div class="flex flex-col gap-1">
     <a href="/" class="flex items-center gap-3 font-semibold tracking-tight text-2xl">
-      <img
+      <Image
         class="site-logo"
-        src="/images/ws-blog-logo.png"
+        src={siteLogo}
         alt="WS Blog logo"
-        width="200"
-        height="100"
+        widths={[120, 160, 200]}
+        sizes="(max-width: 640px) 120px, 160px"
+        format="webp"
+        quality={90}
         loading="eager"
         decoding="async"
       />
@@ -17,27 +37,45 @@ import { Github, Rss, Linkedin, Sun, Moon } from "lucide-astro";
     </a>
     <p class="tagline text-ink-900/80 dark:text-ink-200/80">
       <span class="tagline-prefix">I turn data into decisions - focusing on</span>
-      <span class="tagline-rotator">
-        <span
-          class="rotating-word"
-          data-rotating-words="Optimizely|AI Agents|Personalization|Vibe Coding|Experimentation|LLMs|Recommendations|MCP Servers|Feature Flags|Prompt Engineering|A/B Testing|Claude Code|Product Analytics|AI-Assisted Development|Observability|Agentic Workflows|Clean Architecture|Context Engineering"
-        >Optimizely</span>
-        <span class="rotating-caret" aria-hidden="true">|</span>
-      </span>
+      <RotatingWords
+        class="tagline-rotator"
+        words={[
+          "Optimizely",
+          "AI Agents",
+          "Personalization",
+          "Vibe Coding",
+          "Experimentation",
+          "LLMs",
+          "Recommendations",
+          "MCP Servers",
+          "Feature Flags",
+          "Prompt Engineering",
+          "A/B Testing",
+          "Claude Code",
+          "Product Analytics",
+          "AI-Assisted Development",
+          "Observability",
+          "Agentic Workflows",
+          "Clean Architecture",
+          "Context Engineering",
+        ]}
+      />
     </p>
   </div>
   <nav class="flex flex-wrap items-center gap-4 text-sm sm:justify-end">
-    <a class="nav-link" href="/blog">Blog</a>
-    <a class="nav-link" href="/about">About Me</a>
-    <a class="nav-link" href="/contact">Contact</a>
-    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme" aria-pressed="false">
-      <span class="theme-toggle-track">
-        <span class="theme-toggle-thumb">
-          <Sun size={12} class="theme-icon theme-icon-sun" />
-          <Moon size={12} class="theme-icon theme-icon-moon" />
-        </span>
-      </span>
-    </button>
+    {navItems.map(({ href, label }) => {
+      const isActive = isActivePath(href);
+      return (
+        <a
+          class:list={["nav-link", isActive && "nav-link-active"]}
+          href={href}
+          aria-current={isActive ? "page" : undefined}
+        >
+          {label}
+        </a>
+      );
+    })}
+    <ThemeToggle />
     <a href="https://github.com/AI-Wojtech" aria-label="GitHub">
       <Github size={18} />
     </a>

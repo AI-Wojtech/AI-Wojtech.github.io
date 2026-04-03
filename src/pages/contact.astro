@@ -1,27 +1,79 @@
 ---
+import { Mail } from "lucide-astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 <BaseLayout
   title="Contact"
-  description="Have a question or a problem to solve? Feel free to email me at wojtechseweryn@gmail.com."
+  description="Have a platform to improve, an idea to validate, or a technical direction to clarify? Feel free to email me anytime."
+  mainClass="contact-page-layout"
 >
-  <article class="prose lg:prose-lg">
-    <h1 class="page-title">Contact</h1>
-    <p>
-      Have a question or a problem to solve? Feel free to email me at
-      <a class="contact-link" href="mailto:wojtechseweryn@gmail.com">wojtechseweryn@gmail.com</a>
-    </p>
-  </article>
+  <section class="contact-hero" aria-labelledby="contact-title">
+    <div class="contact-hero-copy">
+      <h1 id="contact-title" class="contact-hero-title">Let's connect.</h1>
+      <p class="contact-hero-lead">
+        Have a platform to improve, an idea to validate, or a technical direction to clarify?
+      </p>
+      <p class="contact-hero-sublead">Feel free to email me anytime.</p>
+    </div>
 
-  <div class="mt-8">
-    <a
-      class="inline-flex items-center justify-center rounded-md bg-accent-600 text-white hover:bg-accent-500 px-4 py-2 text-sm font-semibold transition-colors dark:bg-accent-500 dark:text-ink-950 dark:hover:bg-accent-400"
-      href="mailto:wojtechseweryn@gmail.com"
-    >
-      Email me
-    </a>
-    <p class="mt-3 text-xs text-ink-800/70 dark:text-ink-200/70">
-      <em>This opens your email client.</em>
+    <div class="contact-card">
+      <div class="contact-card-icon" aria-hidden="true">
+        <Mail size={34} />
+      </div>
+
+      <button
+        type="button"
+        class="contact-email-copy"
+        data-contact-copy="wojseweryn@gmail.com"
+        aria-label="Copy wojseweryn@gmail.com"
+      >
+        wojseweryn@gmail.com
+      </button>
+
+      <span class="contact-copy-status" data-contact-copy-status aria-live="polite"></span>
+
+      <a class="contact-email-button" href="mailto:wojseweryn@gmail.com">Email me</a>
+    </div>
+
+    <p class="contact-hero-note">
+      Open to projects, advisory, and thoughtful technical conversations.
     </p>
-  </div>
+  </section>
+
+  <script is:inline>
+    (() => {
+      const button = document.querySelector("[data-contact-copy]");
+      const status = document.querySelector("[data-contact-copy-status]");
+      if (!(button instanceof HTMLButtonElement) || !(status instanceof HTMLElement)) return;
+
+      let resetTimer;
+
+      const showCopied = () => {
+        status.textContent = "Copied";
+        window.clearTimeout(resetTimer);
+        resetTimer = window.setTimeout(() => {
+          status.textContent = "";
+        }, 1400);
+      };
+
+      button.addEventListener("click", async () => {
+        const value = button.dataset.contactCopy ?? "";
+        try {
+          await navigator.clipboard.writeText(value);
+          showCopied();
+        } catch {
+          const area = document.createElement("textarea");
+          area.value = value;
+          area.style.position = "fixed";
+          area.style.opacity = "0";
+          document.body.appendChild(area);
+          area.focus();
+          area.select();
+          document.execCommand("copy");
+          area.remove();
+          showCopied();
+        }
+      });
+    })();
+  </script>
 </BaseLayout>

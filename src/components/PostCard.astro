@@ -1,20 +1,12 @@
 ---
 import { getReadingTime } from "../utils/readingTime";
 import { formatShortDate } from "../utils/formatDate";
+import { getPostCardAppearance } from "../utils/postCardMeta";
 
 const { post, class: className = "", ...rest } = Astro.props;
 const { title, description, pubDate, tags } = post.data;
 const { minutes } = getReadingTime(post.body ?? "");
-
-const primaryTag = tags?.[0] ?? "";
-const tagSlugs = (tags ?? []).map((t: string) => t.toLowerCase());
-
-const hasOptimizely = tagSlugs.includes("optimizely");
-const hasAI = tagSlugs.includes("ai");
-const isOptimizelyAI = hasOptimizely && hasAI;
-
-const tagSlug = isOptimizelyAI ? "optimizely-ai" : primaryTag.toLowerCase();
-const labelText = isOptimizelyAI ? "OPTIMIZELY • AI" : primaryTag;
+const { primaryTag, tagSlug, labelText } = getPostCardAppearance(tags);
 ---
 <article
   class={`card card-tilt card-tilt--${tagSlug} ${className}`.trim()}
@@ -55,3 +47,9 @@ const labelText = isOptimizelyAI ? "OPTIMIZELY • AI" : primaryTag;
     </div>
   </div>
 </article>
+
+<script>
+  import { enhancePostCards } from "../utils/postCardUi";
+
+  enhancePostCards();
+</script>

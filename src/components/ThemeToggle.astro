@@ -1,0 +1,19 @@
+---
+import { Sun, Moon } from "lucide-astro";
+
+const { class: className = "theme-toggle", ariaLabel = "Toggle theme" } = Astro.props;
+---
+<button class={className} type="button" data-theme-toggle aria-label={ariaLabel} aria-pressed="false">
+  <span class="theme-toggle-track">
+    <span class="theme-toggle-thumb">
+      <Sun size={12} class="theme-icon theme-icon-sun" />
+      <Moon size={12} class="theme-icon theme-icon-moon" />
+    </span>
+  </span>
+</button>
+
+<script>
+  import { initThemeToggles } from "../utils/themeToggle";
+
+  initThemeToggles();
+</script>
