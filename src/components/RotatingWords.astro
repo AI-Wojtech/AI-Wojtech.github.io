@@ -6,9 +6,22 @@ interface Props {
   words?: string[];
   class?: string;
   initialWord?: string;
+  typeSpeedMs?: number;
+  deleteSpeedMs?: number;
+  holdMs?: number;
+  nextWordDelayMs?: number;
 }
 
-const { items = [], words = [], class: className = "", initialWord } = Astro.props as Props;
+const {
+  items = [],
+  words = [],
+  class: className = "",
+  initialWord,
+  typeSpeedMs = 42,
+  deleteSpeedMs = 22,
+  holdMs = 1020,
+  nextWordDelayMs = 120,
+} = Astro.props as Props;
 const rotatingItems =
   items.length > 0
     ? items
@@ -23,7 +36,12 @@ const rotatingWords = rotatingItems.map(({ label }) => label).join("|");
 const rotatingTypes = rotatingItems.map(({ type }) => type).join("|");
 ---
 <span class={className} style={`--rotating-word-width: ${reserveWidth};`}>
-  <span class="rotating-word-shell">
+  <span
+    class:list={[
+      "rotating-word-shell",
+      initialItem?.type === "ai" ? "rotating-word-shell--ai" : "rotating-word-shell--optimizely",
+    ]}
+  >
     <span
       class:list={[
         "rotating-word",
@@ -31,11 +49,15 @@ const rotatingTypes = rotatingItems.map(({ type }) => type).join("|");
       ]}
       data-rotating-words={rotatingWords}
       data-rotating-types={rotatingTypes}
+      data-rotating-type-speed={String(typeSpeedMs)}
+      data-rotating-delete-speed={String(deleteSpeedMs)}
+      data-rotating-hold={String(holdMs)}
+      data-rotating-next-delay={String(nextWordDelayMs)}
     >
       {startingWord}
     </span>
+    <span class="rotating-caret" aria-hidden="true"></span>
   </span>
-  <span class="rotating-caret" aria-hidden="true">|</span>
 </span>
 
 <script>
