@@ -36,6 +36,7 @@ const socialLinks = [
   { copyEmail: true, label: "Copy email", icon: Mail },
   { href: "/rss.xml", label: "RSS", icon: Rss },
 ];
+
 ---
 <BaseLayout
   title="Home"
@@ -97,7 +98,14 @@ const socialLinks = [
             <div class="home-landing-summary">
               <p class="home-summary-line home-summary-line--primary">
                 <span class="home-summary-prefix">Turning data into decisions with expertise in</span>
-                <RotatingWords class="home-inline-rotator" items={ROTATING_EXPERTISE_TOPICS} />
+                <RotatingWords
+                  class="home-inline-rotator"
+                  items={ROTATING_EXPERTISE_TOPICS}
+                  typeSpeedMs={42}
+                  deleteSpeedMs={22}
+                  holdMs={1020}
+                  nextWordDelayMs={120}
+                />
               </p>
               <p class="home-summary-line home-summary-line--secondary">
                 Engineering better digital platforms with Optimizely, AI, and experimentation.

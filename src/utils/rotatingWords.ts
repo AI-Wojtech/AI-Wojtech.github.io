@@ -22,22 +22,42 @@ export const initRotatingWords = (root: ParentNode = document) => {
     let wordIndex = 0;
     let charIndex = 0;
     let deleting = false;
+    let timerId: number | undefined;
 
-    const typeSpeed = 80;
-    const deleteSpeed = 50;
-    const pause = 1200;
+    const typeSpeed = Number.parseInt(element.dataset.rotatingTypeSpeed || "42", 10);
+    const deleteSpeed = Number.parseInt(element.dataset.rotatingDeleteSpeed || "22", 10);
+    const hold = Number.parseInt(element.dataset.rotatingHold || "1020", 10);
+    const nextWordDelay = Number.parseInt(element.dataset.rotatingNextDelay || "120", 10);
 
     const updateColor = () => {
       const currentType = types[wordIndex] || (wordIndex % 2 === 0 ? "optimizely" : "ai");
+      const shell = element.parentElement;
       element.classList.toggle("rotating-word--optimizely", currentType === "optimizely");
       element.classList.toggle("rotating-word--ai", currentType === "ai");
+      shell?.classList.toggle("rotating-word-shell--optimizely", currentType === "optimizely");
+      shell?.classList.toggle("rotating-word-shell--ai", currentType === "ai");
+    };
+
+    const schedule = (delay: number) => {
+      timerId = window.setTimeout(tick, delay);
+    };
+
+    const cleanup = () => {
+      if (timerId !== undefined) {
+        window.clearTimeout(timerId);
+      }
+      window.removeEventListener("pagehide", cleanup);
     };
 
     updateColor();
 
     if (prefersReducedMotion) {
+      window.addEventListener("pagehide", cleanup, { once: true });
       return;
     }
+
+    element.textContent = "";
+    window.addEventListener("pagehide", cleanup, { once: true });
 
     const tick = () => {
       const word = words[wordIndex];
@@ -48,7 +68,7 @@ export const initRotatingWords = (root: ParentNode = document) => {
 
         if (charIndex === word.length) {
           deleting = true;
-          window.setTimeout(tick, pause);
+          schedule(hold);
           return;
         }
       } else {
@@ -59,10 +79,12 @@ export const initRotatingWords = (root: ParentNode = document) => {
           deleting = false;
           wordIndex = (wordIndex + 1) % words.length;
           updateColor();
+          schedule(nextWordDelay);
+          return;
         }
       }
 
-      window.setTimeout(tick, deleting ? deleteSpeed : typeSpeed);
+      schedule(deleting ? deleteSpeed : typeSpeed);
     };
 
     tick();
