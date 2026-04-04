@@ -4,6 +4,7 @@ import { Github, Rss, Linkedin } from "lucide-astro";
 import siteLogo from "../assets/branding/ws-blog-logo.png";
 import ThemeToggle from "./ThemeToggle.astro";
 import RotatingWords from "./RotatingWords.astro";
+import { ROTATING_EXPERTISE_TOPICS } from "../utils/rotatingTopics";
 const pathname = Astro.url.pathname;
 const isActivePath = (href) => {
   if (href === "/blog") {
@@ -37,29 +38,7 @@ const navItems = [
     </a>
     <p class="tagline text-ink-900/80 dark:text-ink-200/80">
       <span class="tagline-prefix">I turn data into decisions - focusing on</span>
-      <RotatingWords
-        class="tagline-rotator"
-        words={[
-          "Optimizely",
-          "AI Agents",
-          "Personalization",
-          "Vibe Coding",
-          "Experimentation",
-          "LLMs",
-          "Recommendations",
-          "MCP Servers",
-          "Feature Flags",
-          "Prompt Engineering",
-          "A/B Testing",
-          "Claude Code",
-          "Product Analytics",
-          "AI-Assisted Development",
-          "Observability",
-          "Agentic Workflows",
-          "Clean Architecture",
-          "Context Engineering",
-        ]}
-      />
+      <RotatingWords class="tagline-rotator" items={ROTATING_EXPERTISE_TOPICS} />
     </p>
   </div>
   <nav class="flex flex-wrap items-center gap-4 text-sm sm:justify-end">

@@ -5,6 +5,7 @@ import { BookOpenText, Github, Linkedin, Mail, Rss, UserRound } from "lucide-ast
 import siteLogo from "../assets/branding/ws-blog-logo.png";
 import ThemeToggle from "../components/ThemeToggle.astro";
 import RotatingWords from "../components/RotatingWords.astro";
+import { ROTATING_EXPERTISE_TOPICS } from "../utils/rotatingTopics";
 
 const emailAddress = "wojseweryn@gmail.com";
 
@@ -95,22 +96,8 @@ const socialLinks = [
             <h1 class="home-title">Hello👋 I&apos;m Wojciech Seweryn</h1>
             <div class="home-landing-summary">
               <p class="home-summary-line home-summary-line--primary">
-                Turning data into decisions with expertise in
-                <RotatingWords
-                  class="home-inline-rotator"
-                  words={[
-                    "Optimizely",
-                    "MCP Servers",
-                    "AI Agents",
-                    "Personalization",
-                    "Experimentation",
-                    "Recommendations",
-                    "Prompt Engineering",
-                    "Feature Flags",
-                    "Product Analytics",
-                    "Clean Architecture",
-                  ]}
-                />
+                <span class="home-summary-prefix">Turning data into decisions with expertise in</span>
+                <RotatingWords class="home-inline-rotator" items={ROTATING_EXPERTISE_TOPICS} />
               </p>
               <p class="home-summary-line home-summary-line--secondary">
                 Engineering better digital platforms with Optimizely, AI, and experimentation.
