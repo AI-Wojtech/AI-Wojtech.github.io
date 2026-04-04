@@ -1,9 +1,7 @@
 const ROTATOR_SELECTOR = "[data-rotating-words]";
 
 export const initRotatingWords = (root: ParentNode = document) => {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return;
-  }
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   root.querySelectorAll<HTMLElement>(ROTATOR_SELECTOR).forEach((element) => {
     if (element.dataset.rotatorBound === "true") return;
@@ -11,6 +9,10 @@ export const initRotatingWords = (root: ParentNode = document) => {
     const words = (element.dataset.rotatingWords || "")
       .split("|")
       .map((word) => word.trim())
+      .filter(Boolean);
+    const types = (element.dataset.rotatingTypes || "")
+      .split("|")
+      .map((type) => type.trim())
       .filter(Boolean);
 
     if (words.length === 0) return;
@@ -26,9 +28,16 @@ export const initRotatingWords = (root: ParentNode = document) => {
     const pause = 1200;
 
     const updateColor = () => {
-      element.classList.toggle("rotating-word--optimizely", wordIndex % 2 === 0);
-      element.classList.toggle("rotating-word--ai", wordIndex % 2 !== 0);
+      const currentType = types[wordIndex] || (wordIndex % 2 === 0 ? "optimizely" : "ai");
+      element.classList.toggle("rotating-word--optimizely", currentType === "optimizely");
+      element.classList.toggle("rotating-word--ai", currentType === "ai");
     };
+
+    updateColor();
+
+    if (prefersReducedMotion) {
+      return;
+    }
 
     const tick = () => {
       const word = words[wordIndex];
@@ -56,7 +65,6 @@ export const initRotatingWords = (root: ParentNode = document) => {
       window.setTimeout(tick, deleting ? deleteSpeed : typeSpeed);
     };
 
-    updateColor();
     tick();
   });
 };

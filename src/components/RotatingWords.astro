@@ -1,15 +1,40 @@
 ---
+import type { RotatingTopic } from "../utils/rotatingTopics";
+
 interface Props {
-  words: string[];
+  items?: RotatingTopic[];
+  words?: string[];
   class?: string;
   initialWord?: string;
 }
 
-const { words, class: className = "", initialWord = words[0] ?? "" } = Astro.props as Props;
-const rotatingWords = words.join("|");
+const { items = [], words = [], class: className = "", initialWord } = Astro.props as Props;
+const rotatingItems =
+  items.length > 0
+    ? items
+    : words.map((label, index) => ({
+        label,
+        type: (index % 2 === 0 ? "optimizely" : "ai") as RotatingTopic["type"],
+      }));
+const startingWord = initialWord ?? rotatingItems[0]?.label ?? "";
+const initialItem = rotatingItems.find(({ label }) => label === startingWord) ?? rotatingItems[0];
+const reserveWidth = `${Math.max(rotatingItems.reduce((max, { label }) => Math.max(max, label.length), 0) + 1, 14)}ch`;
+const rotatingWords = rotatingItems.map(({ label }) => label).join("|");
+const rotatingTypes = rotatingItems.map(({ type }) => type).join("|");
 ---
-<span class={className}>
-  <span class="rotating-word" data-rotating-words={rotatingWords}>{initialWord}</span>
+<span class={className} style={`--rotating-word-width: ${reserveWidth};`}>
+  <span class="rotating-word-shell">
+    <span
+      class:list={[
+        "rotating-word",
+        initialItem?.type === "ai" ? "rotating-word--ai" : "rotating-word--optimizely",
+      ]}
+      data-rotating-words={rotatingWords}
+      data-rotating-types={rotatingTypes}
+    >
+      {startingWord}
+    </span>
+  </span>
   <span class="rotating-caret" aria-hidden="true">|</span>
 </span>
 
