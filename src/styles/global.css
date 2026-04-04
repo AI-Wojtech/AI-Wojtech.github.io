@@ -2878,11 +2878,21 @@ html.dark .rotating-caret {
     flex-direction: column;
     align-items: flex-start;
     gap: 2px;
-    padding-bottom: 6px;
+    padding-bottom: 8px;
   }
 
   .tagline-rotator {
     margin-left: 0;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    min-height: 2.35em;
+    padding-bottom: 0.08em;
+  }
+
+  .tagline-rotator .rotating-word-shell {
+    min-height: inherit;
+    align-items: flex-start;
   }
 
   .rotating-word {
