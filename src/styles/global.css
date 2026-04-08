@@ -1661,6 +1661,7 @@ html.dark .article-shell {
   border-radius: 20px;
   border: 1px solid rgba(0,0,0,0.12);
   object-fit: cover;
+  object-position: center 24%;
   background: rgba(0,0,0,0.04);
 }
 
