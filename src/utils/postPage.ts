@@ -175,9 +175,61 @@ const initBackToTop = () => {
   window.addEventListener("resize", onScroll);
 };
 
+const getCollapsedTocLimit = () => {
+  if (window.innerWidth >= 1024) return 5;
+  if (window.innerWidth >= 640) return 4;
+  return 3;
+};
+
+const initTocToggle = () => {
+  const toc = document.querySelector<HTMLElement>("[data-toc]");
+  const button = document.querySelector<HTMLButtonElement>("[data-toc-toggle]");
+  if (!toc || !button || button.dataset.tocToggleBound === "true") return;
+
+  button.dataset.tocToggleBound = "true";
+
+  const count = Number(toc.dataset.tocCount ?? "0");
+
+  const update = () => {
+    const limit = getCollapsedTocLimit();
+    const needsToggle = count > limit;
+    const isExpanded = toc.dataset.expanded === "true";
+
+    button.hidden = !needsToggle;
+    button.disabled = !needsToggle;
+
+    if (!needsToggle) {
+      toc.dataset.expanded = "false";
+      button.setAttribute("aria-expanded", "false");
+      button.textContent = "Show more...";
+      return;
+    }
+
+    button.setAttribute("aria-expanded", String(isExpanded));
+
+    if (isExpanded) {
+      button.textContent = "Show less";
+      return;
+    }
+
+    const remaining = Math.max(count - limit, 0);
+    button.textContent = `Show ${remaining} more...`;
+  };
+
+  button.addEventListener("click", () => {
+    const isExpanded = toc.dataset.expanded === "true";
+    toc.dataset.expanded = isExpanded ? "false" : "true";
+    update();
+  });
+
+  update();
+  window.addEventListener("resize", update);
+};
+
 export const initPostPageEnhancements = () => {
   initCopyButtons();
   initImageLightbox();
   initReadingProgress();
   initBackToTop();
+  initTocToggle();
 };
