@@ -5,12 +5,22 @@ import Footer from "../components/Footer.astro";
 import CookieBanner from "../components/CookieBanner.astro";
 import ogImage from "../assets/about/wojciech-1.png";
 
-const { title, description, canonical, mainClass = "", showHeader = true, showFooter = true } = Astro.props;
+const {
+  title,
+  description,
+  canonical,
+  mainClass = "",
+  showHeader = true,
+  showFooter = true,
+  ogImage: customOgImage,
+  ogImageAlt = "Wojciech Seweryn"
+} = Astro.props;
 const siteTitle = "Wojciech Seweryn";
 const metaTitle = title ? `${title} | ${siteTitle}` : siteTitle;
 const metaDescription = description ?? "A minimalist technical blog about personalization and optimization.";
 const canonicalUrl = canonical ?? Astro.url;
-const ogImageUrl = new URL(ogImage.src ?? ogImage, Astro.site ?? Astro.url).toString();
+const ogImageSource = customOgImage ?? ogImage;
+const ogImageUrl = new URL(ogImageSource.src ?? ogImageSource, Astro.site ?? Astro.url).toString();
 ---
 <!doctype html>
 <html lang="en">
@@ -26,7 +36,12 @@ const ogImageUrl = new URL(ogImage.src ?? ogImage, Astro.site ?? Astro.url).toSt
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:alt" content="Wojciech Seweryn" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={metaTitle} />
+    <meta name="twitter:description" content={metaDescription} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
     <script is:inline>
       (() => {
         try {

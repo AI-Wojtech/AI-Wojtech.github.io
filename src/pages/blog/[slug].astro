@@ -15,10 +15,11 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { title, description, pubDate, tags } = post.data;
+const { title, description, pubDate, tags, heroImage } = post.data;
 const { Content, headings } = await post.render();
 const { minutes } = getReadingTime(post.body ?? "");
 const toc = headings.filter((heading) => heading.depth > 1 && heading.depth <= 3);
+const tocListId = `toc-list-${post.slug}`;
 const yearsExperience = getYearsExperience();
 
 const relatedPosts = (await getCollection("blog"))
@@ -35,41 +36,70 @@ const relatedPosts = (await getCollection("blog"))
   .slice(0, 2)
   .map((item) => item.entry);
 ---
-<BaseLayout title={title} description={description} canonical={Astro.url} mainClass="post-layout">
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={Astro.url}
+  mainClass="post-layout"
+  ogImage={heroImage}
+  ogImageAlt={title}
+>
   <div class="reading-progress" data-reading-progress></div>
   <button class="back-to-top" type="button" data-back-to-top aria-label="Back to top">
     <span class="back-to-top-icon" aria-hidden="true">↑</span>
   </button>
   <div class="article-shell">
-  <article class="prose lg:prose-lg">
-    <h1>{title}</h1>
-    <p class="text-sm text-ink-900/70 dark:text-ink-200/70">
+    <article class="prose post-prose">
+      <header class="post-hero">
+        <h1>{title}</h1>
+        <p class="post-meta text-sm text-ink-900/70 dark:text-ink-200/70">
       <time datetime={pubDate.toISOString()}>{formatShortDate(pubDate)}</time>
       <span aria-hidden="true"> · </span>
       <span>{minutes} min read</span>
-    </p>
-    <div class="mt-4 flex flex-wrap gap-2">
+        </p>
+        <div class="post-tags mt-4 flex flex-wrap gap-2">
       {tags.map((tag) => (
         <a class="tag-chip tag-chip-large" href={`/tag/${tag}`}>
           #{tag}
         </a>
       ))}
-    </div>
-    {toc.length > 0 && (
-      <nav class="toc not-prose" aria-label="Table of contents">
+        </div>
+      </header>
+      <div class="post-body-flow">
+        {toc.length > 0 && (
+      <nav
+        class="toc not-prose"
+        aria-label="Table of contents"
+        data-toc
+        data-expanded="false"
+        data-toc-count={toc.length}
+      >
         <div class="toc-title">Table of contents</div>
-        <ul class="toc-list">
+        <ul class="toc-list" id={tocListId}>
           {toc.map((heading) => (
             <li class={`toc-item depth-${heading.depth}`}>
               <a class="toc-link" href={`#${heading.slug}`}>{heading.text}</a>
             </li>
           ))}
         </ul>
+        {toc.length > 3 && (
+          <button
+            class="toc-toggle"
+            type="button"
+            data-toc-toggle
+            aria-controls={tocListId}
+            aria-expanded="false"
+            hidden
+          >
+            Show more...
+          </button>
+        )}
       </nav>
-    )}
-    <hr />
-    <Content />
-  </article>
+        )}
+        <hr />
+        <Content />
+      </div>
+    </article>
   </div>
   <section class="mt-12">
     <div class="section-divider" aria-hidden="true"></div>

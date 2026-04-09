@@ -159,6 +159,67 @@ html.dark .search-icon {
   color: #0b0d12;
 }
 
+.post-prose {
+  color: #0f141c;
+}
+
+.post-hero,
+.post-body-flow {
+  width: 100%;
+}
+
+.post-hero > h1 {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  font-size: clamp(1.9rem, 3.45vw, 2.85rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: pretty;
+}
+
+.post-meta {
+  margin: 0.95rem 0 0;
+  line-height: 1.35;
+}
+
+.post-tags {
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.post-body-flow {
+  font-size: 0.98rem;
+}
+
+.post-body-flow :where(p, li, blockquote) {
+  line-height: 1.58;
+}
+
+.post-body-flow :where(p, ul, ol, blockquote, pre, table) {
+  margin-top: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+
+.post-body-flow :where(h2, h3, h4) {
+  margin-top: 1.6rem;
+  margin-bottom: 0.7rem;
+  line-height: 1.14;
+}
+
+.post-body-flow :where(ul, ol) {
+  padding-left: 1.15rem;
+}
+
+.post-body-flow li {
+  margin: 0.16rem 0;
+}
+
+.post-body-flow hr {
+  margin: 1.4rem 0;
+}
+
 .prose h2,
 .prose h3,
 .prose h4,
@@ -317,7 +378,7 @@ html.dark .search-icon {
 
 .toc {
   margin-top: 1.5rem;
-  padding: 12px 14px;
+  padding: 12px 14px 10px;
   border-radius: 12px;
   border: 1px solid rgba(0,0,0,0.08);
   background: rgba(248,250,252,0.8);
@@ -327,35 +388,98 @@ html.dark .search-icon {
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(15,20,28,0.52);
-  margin-bottom: 6px;
+  color: rgba(15,20,28,0.7);
+  margin-bottom: 4px;
 }
 
 .toc-list {
   display: grid;
-  gap: 4px;
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .toc-item {
+  display: block;
   font-size: 13px;
 }
 
 .toc-item.depth-3 {
-  margin-left: 12px;
+  margin-left: 10px;
   font-size: 12px;
 }
 
 .toc-link {
-  color: rgba(15,20,28,0.82);
+  display: inline-block;
+  max-width: 100%;
+  padding: 1px 0;
+  color: #1a8b99;
+  line-height: 1.18;
   text-decoration: none;
+}
+
+.toc-link:visited,
+.toc-item.depth-3 .toc-link,
+.toc-item.depth-3 .toc-link:visited {
+  color: #1a8b99;
+}
+
+.toc-link::after {
+  content: none;
 }
 
 .toc-link:hover {
   text-decoration: underline;
+  text-decoration-color: rgba(26, 139, 153, 0.55);
   text-underline-offset: 4px;
+}
+
+.toc-toggle {
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #137d89;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.toc-toggle:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.toc-toggle:focus-visible {
+  outline: 2px solid rgba(34, 182, 199, 0.45);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.toc[data-expanded="false"] .toc-item:nth-child(n + 4) {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .toc[data-expanded="false"] .toc-item:nth-child(-n + 4) {
+    display: block;
+  }
+
+  .toc[data-expanded="false"] .toc-item:nth-child(n + 5) {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .toc[data-expanded="false"] .toc-item:nth-child(-n + 5) {
+    display: block;
+  }
+
+  .toc[data-expanded="false"] .toc-item:nth-child(n + 6) {
+    display: none;
+  }
 }
 
 html.dark .prose hr {
@@ -405,7 +529,21 @@ html.dark .toc-title {
 }
 
 html.dark .toc-link {
-  color: #eef2f8;
+  color: #89d7ec;
+}
+
+html.dark .toc-link:visited,
+html.dark .toc-item.depth-3 .toc-link,
+html.dark .toc-item.depth-3 .toc-link:visited {
+  color: #89d7ec;
+}
+
+html.dark .toc-link:hover {
+  text-decoration-color: rgba(137, 215, 236, 0.55);
+}
+
+html.dark .toc-toggle {
+  color: #7ed0db;
 }
 
 .section-divider {
@@ -1306,8 +1444,18 @@ html.dark .home-article-read:focus-visible {
     padding: 28px 24px 32px;
   }
 
-  .post-layout .article-shell > .prose {
-    max-width: 52rem;
+  .post-layout .article-shell > .post-prose {
+    max-width: 60rem;
+    margin-inline: auto;
+  }
+
+  .post-layout .article-shell > .post-prose > .post-hero {
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .post-layout .article-shell > .post-prose > .post-body-flow {
+    max-width: 49rem;
     margin-inline: auto;
   }
 }
@@ -1610,11 +1758,11 @@ html.dark .about-feature-list {
 }
 
 html.dark .article-shell {
-  border-color: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.14);
   background:
-    linear-gradient(180deg, rgba(15,20,28,0.82), rgba(15,20,28,0.76)),
-    radial-gradient(420px 220px at 100% 0%, rgba(62,214,229,0.10), transparent 70%);
-  box-shadow: 0 24px 56px rgba(0,0,0,0.28);
+    linear-gradient(180deg, rgba(27,32,43,0.88), rgba(22,27,37,0.82)),
+    radial-gradient(460px 240px at 100% 0%, rgba(62,214,229,0.14), transparent 72%);
+  box-shadow: 0 24px 56px rgba(0,0,0,0.24);
 }
 
 .author-card {
@@ -1741,6 +1889,14 @@ html.dark .author-card-photo {
 
 html.dark .author-card-kicker {
   color: rgba(232,238,246,0.5);
+}
+
+html.dark .author-card {
+  border-color: rgba(255,255,255,0.14);
+  background:
+    linear-gradient(180deg, rgba(31,37,50,0.9), rgba(26,32,43,0.84)),
+    radial-gradient(320px 180px at 100% 0%, rgba(62,214,229,0.14), transparent 72%);
+  box-shadow: 0 22px 46px rgba(8,12,18,0.38);
 }
 
 html.dark .author-card-role {
@@ -3239,9 +3395,11 @@ html.dark .contact-hero::after {
 }
 
 html.dark .contact-card {
-  border-color: rgba(255,255,255,0.12);
-  background: rgba(15,20,28,0.62);
-  box-shadow: 0 18px 42px rgba(8,12,18,0.46);
+  border-color: rgba(255,255,255,0.14);
+  background:
+    linear-gradient(180deg, rgba(32,38,51,0.9), rgba(27,33,45,0.84)),
+    radial-gradient(220px 140px at 100% 0%, rgba(62,214,229,0.14), transparent 74%);
+  box-shadow: 0 18px 42px rgba(8,12,18,0.34);
 }
 
 html.dark .contact-card::before {
@@ -3468,6 +3626,15 @@ html.dark .theme-toggle-thumb {
 
 html.dark .card-surface {
   background-color: rgba(15,20,28,0.95);
+}
+
+html.dark .card-compact .card-surface,
+html.dark .card-surface.flex.gap-0 {
+  border-color: rgba(255,255,255,0.14);
+  background:
+    linear-gradient(180deg, rgba(31,37,50,0.9), rgba(25,31,43,0.84)),
+    radial-gradient(240px 150px at 100% 0%, rgba(62,214,229,0.12), transparent 72%);
+  box-shadow: 0 18px 40px rgba(8,12,18,0.3);
 }
 
 html.dark .card-surface::after {
