@@ -226,10 +226,58 @@ const initTocToggle = () => {
   window.addEventListener("resize", update);
 };
 
+const initInteractiveTaskLists = () => {
+  const checkboxes = document.querySelectorAll<HTMLInputElement>("article.prose li > input[type='checkbox']");
+  if (checkboxes.length === 0) return;
+
+  const storageKey = `post-checklist:${window.location.pathname}`;
+
+  let savedState: Record<string, boolean> = {};
+  try {
+    savedState = JSON.parse(window.localStorage.getItem(storageKey) ?? "{}") as Record<string, boolean>;
+  } catch {
+    savedState = {};
+  }
+
+  const persist = () => {
+    const state = Array.from(checkboxes).reduce<Record<string, boolean>>((result, checkbox, index) => {
+      result[String(index)] = checkbox.checked;
+      return result;
+    }, {});
+
+    window.localStorage.setItem(storageKey, JSON.stringify(state));
+  };
+
+  checkboxes.forEach((checkbox, index) => {
+    if (checkbox.dataset.taskListBound === "true") return;
+
+    checkbox.dataset.taskListBound = "true";
+    checkbox.disabled = false;
+    checkbox.setAttribute("aria-label", `Checklist item ${index + 1}`);
+
+    const saved = savedState[String(index)];
+    if (typeof saved === "boolean") {
+      checkbox.checked = saved;
+    }
+
+    const item = checkbox.closest("li");
+    item?.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement) || target === checkbox || target.closest("a, button, input, label")) return;
+
+      checkbox.checked = !checkbox.checked;
+      checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+
+    checkbox.addEventListener("change", persist);
+  });
+};
+
 export const initPostPageEnhancements = () => {
   initCopyButtons();
   initImageLightbox();
   initReadingProgress();
   initBackToTop();
   initTocToggle();
+  initInteractiveTaskLists();
 };
