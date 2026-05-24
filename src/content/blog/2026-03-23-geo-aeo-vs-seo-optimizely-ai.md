@@ -2,6 +2,7 @@
 title: "AEO/GEO in a Legacy Optimizely CMS Project: A Practical Pattern for Google, ChatGPT, and Claude"
 description: "A practical Optimizely CMS pattern for AEO/GEO on legacy sites: shared page metadata, Razor-rendered JSON-LD, crawler-aware robots.txt, and Scheduled Jobs for gradual enrichment."
 pubDate: 2026-03-23
+publishedAt: 2026-03-25T13:01:37+01:00
 tags: ["Optimizely", "AI", "SEO", "AEO", "GEO", "CMS"]
 draft: false
 ---

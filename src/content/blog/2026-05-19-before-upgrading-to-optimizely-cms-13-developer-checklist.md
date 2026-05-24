@@ -2,6 +2,7 @@
 title: "Before Upgrading to Optimizely CMS 13: A Developer Checklist"
 description: "A practical checklist for reviewing a CMS 12 solution before moving to Optimizely CMS 13."
 pubDate: 2026-05-19
+publishedAt: 2026-05-20T10:56:42+02:00
 tags: ["Optimizely CMS", "CMS 13", "Upgrade", "Optimizely Graph", "Opti ID", ".NET 10"]
 draft: false
 ---

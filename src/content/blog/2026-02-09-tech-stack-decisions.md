@@ -2,6 +2,7 @@
 title: "The Stack Behind This Blog. Choices, Reasons and Lessons"
 description: "A short, honest overview of the tools I picked and the trade-offs I accept."
 pubDate: 2026-02-09
+publishedAt: 2026-02-10T00:44:48+01:00
 tags: ["astro", "tailwind", "shiki", "hosting", "giscus"]
 draft: false
 ---

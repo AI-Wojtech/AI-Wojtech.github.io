@@ -2,6 +2,7 @@
 title: "Optimizely CMS 13: Why Search & Navigation Now Means Graph Migration"
 description: "Optimizely CMS 13 makes Graph a required part of the platform. Here is what that means in practice for teams moving from Search & Navigation, with a few simple code comparisons."
 pubDate: 2026-04-07
+publishedAt: 2026-04-08T10:19:24+02:00
 tags: ["Optimizely", "CMS 13", "Optimizely Graph", "Search & Navigation", "C#"]
 draft: false
 ---

@@ -7,6 +7,7 @@ const blog = defineCollection({
       title: z.string(),
       description: z.string(),
       pubDate: z.date(),
+      publishedAt: z.date().optional(),
       tags: z.array(z.string()),
       draft: z.boolean(),
       heroImage: image().optional()
@@ -20,6 +21,7 @@ const blogDummy = defineCollection({
       title: z.string(),
       description: z.string(),
       pubDate: z.date(),
+      publishedAt: z.date().optional(),
       tags: z.array(z.string()),
       draft: z.boolean(),
       heroImage: image().optional()

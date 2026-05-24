@@ -2,6 +2,7 @@
 title: "Customizing Product Data Sent to Optimizely Product Recommendations in Optimizely Commerce"
 description: "A practical guide to customizing IEntryAttributeService in Optimizely Commerce so you can override product titles, add custom feed attributes, and keep safe fallbacks to the default behavior."
 pubDate: 2026-03-20
+publishedAt: 2026-03-20T17:53:41+01:00
 tags: ["Optimizely", "Optimizely Commerce", "Product Recommendations", "Personalization", "C#", "Architecture"]
 draft: false
 ---
