@@ -6,3 +6,4 @@ dist/
 public/assets/blog-images/
 src/content/blog-style/*
 .github/skills/opti-new-blogpost-2/
+.github/*
