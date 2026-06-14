@@ -100,9 +100,11 @@ The same audience design can also support Feature Experimentation. After the ODP
 
 In practice, the audience becomes one of the targeting conditions in the flag rule. That means the same Real-Time Audience you prepare in ODP can be used to decide who should receive a specific delivery or experiment variation.
 
-There is one timing caveat I would keep in mind. ODP is fast, but it is not the same as checking a local value in your application code. Optimizely documentation describes Real-Time Audiences as refreshing in less than 90 seconds, with most requests taking under 10 seconds.
+There is one timing caveat I would keep in mind. ODP is fast, but it is not the same as checking a local value in your application code. According to Optimizely documentation, ODP usually reaches accurate results in less than 30 seconds, and in 99.999% of cases it takes less than 90 seconds.
 
-That means I would not use a Real-Time Audience to decide what to show immediately after a purchase on the confirmation page. For that case, local state or a custom user attribute is safer.
+That is still fast for a CDP, but it is not instant.
+
+This is why I would not use a Real-Time Audience to decide what to show immediately after a purchase on the confirmation page. For that case, local state or a custom user attribute is safer.
 
 For onsite personalization based on recent browsing, cart behavior, or previous engagement, Real-Time Audiences are a much better fit.
 
