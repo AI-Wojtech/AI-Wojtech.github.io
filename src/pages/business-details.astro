@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const companyRows = [
+  { label: "Business name", value: "Wojciech Seweryn" },
+  { label: "NIP", value: "6812095100" },
+  { label: "REGON", value: "523074440" },
+  { label: "Country", value: "Poland" },
+];
+
+const contactRows = [
+  { label: "Email", value: "wojtechseweryn@gmail.com", href: "mailto:wojtechseweryn@gmail.com" },
+  { label: "Website", value: "https://wseweryn.dev", href: "https://wseweryn.dev" },
+];
+---
+<BaseLayout
+  title="Business details"
+  description="Business details for the independent software development services provided by Wojciech Seweryn."
+  mainClass="wwm-layout"
+>
+  <section class="wwm-hero" data-reveal>
+    <p class="wwm-eyebrow">Business details</p>
+    <h1 class="wwm-title">Business details</h1>
+    <p class="wwm-subtitle">
+      This website is operated by Wojciech Seweryn, an independent backend developer based in Poland.
+    </p>
+  </section>
+
+  <div class="wwm-contact-grid wwm-contact-grid--even">
+    <aside class="card-surface wwm-company" data-reveal aria-labelledby="bd-company-title">
+      <h2 id="bd-company-title" class="wwm-company-title">Company</h2>
+      <dl class="wwm-company-list">
+        {companyRows.map(({ label, value }) => (
+          <div class="wwm-company-row">
+            <dt>{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </aside>
+
+    <aside class="card-surface wwm-company" data-reveal aria-labelledby="bd-contact-title">
+      <h2 id="bd-contact-title" class="wwm-company-title">Contact</h2>
+      <dl class="wwm-company-list">
+        {contactRows.map(({ label, value, href }) => (
+          <div class="wwm-company-row">
+            <dt>{label}</dt>
+            <dd>
+              <a class="contact-link" href={href}>{value}</a>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </aside>
+  </div>
+
+  <script is:inline>
+    (() => {
+      const targets = Array.from(document.querySelectorAll("[data-reveal]"));
+      if (targets.length === 0) return;
+
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefersReduced || !("IntersectionObserver" in window)) {
+        targets.forEach((el) => el.classList.add("is-visible"));
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px 0px -10% 0px", threshold: 0.12 }
+      );
+
+      targets.forEach((el) => observer.observe(el));
+    })();
+  </script>
+</BaseLayout>
