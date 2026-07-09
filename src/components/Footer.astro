@@ -2,66 +2,66 @@
 import { Github, Rss, Linkedin, ChevronDown } from "lucide-astro";
 ---
 <footer class="mx-auto mt-16 max-w-4xl border-t border-black/10 dark:border-white/10 px-4 py-10 text-sm text-ink-900/80 dark:text-ink-200/80">
-  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-    <div class="footer-left">
-      <details class="footer-disclosure">
-        <summary>
-          &copy; 2026 Wojciech Seweryn. Analytics with consent.
-          <span class="footer-disclosure-hint" aria-hidden="true">
-            Details
-            <ChevronDown size={14} class="footer-disclosure-icon" />
-          </span>
-        </summary>
-        <div class="footer-banner">
-          <p>I build data-driven personalization and experimentation for a living.</p>
-          <p class="footer-banner-strong">
-            Google Analytics runs only after you accept cookies in the consent banner.
-          </p>
-          <p class="footer-banner-spaced">
-            Comments are powered by GitHub (giscus) and load separately from analytics.
-          </p>
-          <p class="footer-banner-spaced">
-            Decline to browse without analytics cookies.
-          </p>
-          <div class="footer-consent" data-consent-controls hidden aria-hidden="true">
-            <p class="footer-banner-spaced footer-consent-title">Change analytics consent</p>
-            <div class="footer-consent-actions" role="group" aria-label="Change analytics consent">
-              <button
-                class="footer-consent-btn"
-                type="button"
-                data-consent-choice="granted"
-                aria-pressed="false"
-              >
-                Accept analytics
-              </button>
-              <button
-                class="footer-consent-btn"
-                type="button"
-                data-consent-choice="denied"
-                aria-pressed="false"
-              >
-                Decline
-              </button>
-            </div>
-          </div>
-        </div>
-      </details>
-    </div>
-    <div class="flex flex-wrap items-center gap-4">
+  <div class="footer-primary">
+    <nav class="footer-nav" aria-label="Footer">
       <a class="footer-contact" href="/work-with-me">Work with me</a>
       <a class="footer-contact" href="/business-details">Business details</a>
       <a class="footer-contact" href="/privacy-policy">Privacy Policy</a>
       <a class="footer-contact" href="/contact">Contact</a>
-      <a href="https://github.com/AI-Wojtech" aria-label="GitHub">
-        <Github size={18} />
-      </a>
-      <a href="https://www.linkedin.com/in/wojciechseweryn/" aria-label="LinkedIn">
-        <Linkedin size={18} />
-      </a>
-      <a href="/rss.xml" aria-label="RSS">
-        <Rss size={18} />
-      </a>
-    </div>
+    </nav>
+    <details class="footer-disclosure">
+      <summary>
+        &copy; 2026 Wojciech Seweryn. Analytics with consent.
+        <span class="footer-disclosure-hint" aria-hidden="true">
+          Details
+          <ChevronDown size={14} class="footer-disclosure-icon" />
+        </span>
+      </summary>
+      <div class="footer-banner">
+        <p>I build data-driven personalization and experimentation for a living.</p>
+        <p class="footer-banner-strong">
+          Google Analytics runs only after you accept cookies in the consent banner.
+        </p>
+        <p class="footer-banner-spaced">
+          Comments are powered by GitHub (giscus) and load separately from analytics.
+        </p>
+        <p class="footer-banner-spaced">
+          Decline to browse without analytics cookies.
+        </p>
+        <div class="footer-consent" data-consent-controls hidden aria-hidden="true">
+          <p class="footer-banner-spaced footer-consent-title">Change analytics consent</p>
+          <div class="footer-consent-actions" role="group" aria-label="Change analytics consent">
+            <button
+              class="footer-consent-btn"
+              type="button"
+              data-consent-choice="granted"
+              aria-pressed="false"
+            >
+              Accept analytics
+            </button>
+            <button
+              class="footer-consent-btn"
+              type="button"
+              data-consent-choice="denied"
+              aria-pressed="false"
+            >
+              Decline
+            </button>
+          </div>
+        </div>
+      </div>
+    </details>
+  </div>
+  <div class="footer-social">
+    <a href="https://github.com/AI-Wojtech" aria-label="GitHub">
+      <Github size={18} />
+    </a>
+    <a href="https://www.linkedin.com/in/wojciechseweryn/" aria-label="LinkedIn">
+      <Linkedin size={18} />
+    </a>
+    <a href="/rss.xml" aria-label="RSS">
+      <Rss size={18} />
+    </a>
   </div>
   <p class="footer-business">
     Independent B2B software development services provided by Wojciech Seweryn,
